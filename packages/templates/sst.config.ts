@@ -1,39 +1,46 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
-import { readFileSync } from "fs";
-
-function detectFramework(): "nextjs" | "sveltekit" | "static" {
-  try {
-    const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
-    const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-    if (deps["next"]) return "nextjs";
-    if (deps["@sveltejs/kit"]) return "sveltekit";
-  } catch {}
-  return "static";
-}
-
 export default $config({
   app(input) {
     return {
       name: process.env.REPO_NAME ?? "app",
       home: "aws",
-      removal: input?.stage?.startsWith("pr-") ? "always" : "retain",
+      removal: input?.stage?.startsWith("pr-") ? "remove" : "retain",
     };
   },
   async run() {
+    const { readFileSync } = await import("fs");
+
+    function detectFramework(): "nextjs" | "sveltekit" | "static" {
+      try {
+        const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
+        const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+        if (deps["next"]) return "nextjs";
+        if (deps["@sveltejs/kit"]) return "sveltekit";
+      } catch {}
+      return "static";
+    }
+
     const framework = detectFramework();
 
+    let url: $util.Output<string>;
+
     if (framework === "nextjs") {
-      new sst.aws.Nextjs("App");
+      const site = new sst.aws.Nextjs("Web");
+      url = site.url;
     } else if (framework === "sveltekit") {
-      new sst.aws.SvelteKit("App");
+      const site = new sst.aws.SvelteKit("Web");
+      url = site.url;
     } else {
-      new sst.aws.StaticSite("App", {
+      const site = new sst.aws.StaticSite("Web", {
         build: {
           command: "npm run build",
           output: "dist",
         },
       });
+      url = site.url;
     }
+
+    return { url };
   },
 });

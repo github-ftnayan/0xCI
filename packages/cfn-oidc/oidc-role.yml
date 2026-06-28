@@ -34,7 +34,7 @@ Resources:
       ClientIdList:
         - sts.amazonaws.com
       ThumbprintList:
-        - 6938fd4d98bab03faadb97b34396831e3780aea
+        - 1c58a3a8518e8759bf075b76b750d4f2df264fcd
 
   DeployRole:
     Type: AWS::IAM::Role
@@ -62,6 +62,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSLambda_FullAccess
         - arn:aws:iam::aws:policy/AmazonSSMFullAccess
         - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
       Policies:
         - PolicyName: SSTIAMPassRole
           PolicyDocument:
