@@ -63,6 +63,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonSSMFullAccess
         - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
       Policies:
         - PolicyName: SSTIAMPassRole
           PolicyDocument:
