@@ -36,3 +36,10 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# SST
+.sst/
+sst-env.d.ts
+
+# OpenNext
+.open-next/
