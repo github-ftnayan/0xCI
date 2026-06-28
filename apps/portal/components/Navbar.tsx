@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+const NAV_LINKS = ["Docs", "Changelog", "Community"];
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -12,14 +15,19 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close menu on resize to desktop
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth >= 768) setMenuOpen(false); };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-[#2A2A38]"
-          : "bg-transparent"
-      }`}
-    >
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled || menuOpen
+        ? "bg-[#0A0A0F]/95 backdrop-blur-xl border-b border-[#2A2A38]"
+        : "bg-transparent"
+    }`}>
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between relative">
         {/* Wordmark */}
         <a href="/" className="flex items-center gap-0.5">
@@ -27,9 +35,9 @@ export function Navbar() {
           <span className="font-sans font-light text-xl tracking-tight text-[#F0F0F8]">CI</span>
         </a>
 
-        {/* Center nav (desktop) — absolutely centered relative to full header */}
+        {/* Center nav (desktop) */}
         <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-          {["Docs", "Changelog", "Community"].map((item) => (
+          {NAV_LINKS.map((item) => (
             <a
               key={item}
               href="#"
@@ -54,16 +62,57 @@ export function Navbar() {
             href="https://github.com/apps/0xci-hexci/installations/new"
             target="_blank"
             rel="noopener noreferrer"
-            className="border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200"
+            className="hidden md:inline-flex border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200"
           >
             Install App
           </a>
-          {/* Mobile hamburger */}
-          <button className="md:hidden text-[#8888A8] hover:text-[#00ff88] transition-colors p-1">
-            <span className="material-symbols-outlined text-2xl">menu</span>
+          {/* Hamburger */}
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+            className="md:hidden text-[#8888A8] hover:text-[#00ff88] transition-colors p-1"
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {menuOpen ? "close" : "menu"}
+            </span>
           </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <nav className="md:hidden border-t border-[#2A2A38] px-6 py-4 flex flex-col gap-4">
+          {NAV_LINKS.map((item) => (
+            <a
+              key={item}
+              href="#"
+              onClick={() => setMenuOpen(false)}
+              className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors py-1"
+            >
+              {item}
+            </a>
+          ))}
+          <div className="border-t border-[#2A2A38] pt-4 flex flex-col gap-3">
+            <a
+              href="https://github.com/github-ftnayan/0xCI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors"
+            >
+              <GitHubIcon />
+              View on GitHub
+            </a>
+            <a
+              href="https://github.com/apps/0xci-hexci/installations/new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200 text-center"
+            >
+              Install App
+            </a>
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

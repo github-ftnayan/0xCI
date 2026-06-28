@@ -163,7 +163,7 @@ export default function Home() {
         </section>
 
         {/* ── Footer ───────────────────────────────────────────── */}
-        <footer className="bg-[#0e0e13] w-full px-container-margin flex flex-col md:flex-row justify-between items-center gap-gutter border-t border-[#2A2A38] py-8 mb-16 md:mb-0">
+        <footer className="bg-[#0e0e13] w-full px-container-margin flex flex-col md:flex-row justify-between items-center gap-gutter border-t border-[#2A2A38] py-8">
           <div className="flex flex-col items-center md:items-start gap-1">
             <span className="font-mono text-lg">
               <span className="text-[#00ff88] font-bold">0x</span>
@@ -206,21 +206,6 @@ export default function Home() {
         </footer>
       </main>
 
-      {/* ── Mobile Bottom Nav ────────────────────────────────────── */}
-      <nav className="md:hidden fixed bottom-0 w-full z-50 border-t border-[#2A2A38] bg-[#1b1b20]/90 backdrop-blur-md flex justify-around items-center h-16 px-gutter">
-        <button className="flex flex-col items-center justify-center text-[#8888A8] gap-0.5 hover:text-[#00ff88] transition-colors">
-          <span className="material-symbols-outlined text-[22px]">deployed_code</span>
-          <span className="font-mono text-[10px] tracking-widest">Product</span>
-        </button>
-        <button className="flex flex-col items-center justify-center text-[#00ff88] bg-[#00ff88]/10 rounded-full px-5 py-1 gap-0.5">
-          <span className="material-symbols-outlined text-[22px]">menu_book</span>
-          <span className="font-mono text-[10px] tracking-widest">Docs</span>
-        </button>
-        <button className="flex flex-col items-center justify-center text-[#8888A8] gap-0.5 hover:text-[#00ff88] transition-colors">
-          <span className="material-symbols-outlined text-[22px]">terminal</span>
-          <span className="font-mono text-[10px] tracking-widest">Console</span>
-        </button>
-      </nav>
     </div>
   );
 }
