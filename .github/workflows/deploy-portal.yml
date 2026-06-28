@@ -1,6 +1,7 @@
 name: Deploy Portal
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -27,8 +28,6 @@ jobs:
           role-session-name: 0xci-portal-deploy
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - uses: actions/setup-node@v4
         with:

@@ -1,159 +1,122 @@
-# Turborepo starter
+# 0xCI
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Zero-config GitHub App for AWS preview deployments.**
 
-## Using this example
+Every pull request gets its own live URL — built on your AWS account, not ours. No platform markup. No vendor lock-in.
 
-Run the following command:
+→ **[0xci.online](https://0xci.online)**
 
-```sh
-npx create-turbo@latest
+---
+
+## Why 0xCI
+
+Vercel and Netlify give you a great experience — but you're paying a platform tax for it.
+
+| | Vercel Pro | Netlify Pro | **0xCI** |
+|---|---|---|---|
+| Price | $20/seat/mo + usage | $19/seat/mo + usage | **$0** (you pay AWS directly) |
+| Bandwidth | $0.15/GB after 1TB | $0.55/GB after 100GB | ~$0.11/GB (CloudFront) |
+| Preview environments | ✓ | ✓ | ✓ |
+| Your own AWS account | ✗ | ✗ | ✓ |
+| No vendor lock-in | ✗ | ✗ | ✓ |
+| Data sovereignty | ✗ | ✗ | ✓ |
+| Long-lived secrets | Required | Required | **Never — OIDC only** |
+
+At low-to-medium traffic (under 1M visitors/month), your AWS bill is effectively **$0.50/month** (one Route 53 hosted zone). Compare that to $20–40/month minimum on managed platforms before you even factor in usage fees.
+
+## Vision
+
+0xCI's goal is to make AWS deployments as effortless as Vercel — without giving up your infrastructure.
+
+**Today:** Install the app → run one CloudFormation command → every PR gets a live preview URL automatically. Teardown is automatic on merge/close.
+
+**Coming soon:**
+- Onboarding dashboard with guided AWS account setup (no CLI needed)
+- Vanity preview URLs: `pr-42.your-app.0xci.dev`
+- PR comments with live preview links and deployment status
+- Multi-region support
+
+The philosophy: your code runs on your cloud. We just wire it together.
+
+---
+
+## How it works
+
+1. **Install** the 0xCI GitHub App on your repository
+2. **Connect AWS** — run the one-click CloudFormation stack to create an OIDC role (no long-lived keys stored anywhere)
+3. **Open a PR** — 0xCI injects a deploy workflow, GitHub Actions builds on Ubuntu runners, SST provisions a live preview on your AWS account
+4. **Merge or close** — preview environment is automatically torn down
+
+```
+PR opened → GitHub Actions → OIDC → AWS
+                                      ├── Lambda (SSR)
+                                      ├── CloudFront (CDN + URL)
+                                      └── S3 (static assets)
 ```
 
-## What's inside?
+Build compute runs on GitHub's free runners. You only pay AWS for what you use — typically $0/month at low traffic.
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## Monorepo structure
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+```
+apps/
+  portal/          # Marketing site (Next.js, deployed to 0xci.online)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+packages/
+  probot-app/      # GitHub App (Probot + TypeScript)
+  cfn-oidc/        # CloudFormation template — OIDC IAM role setup
+  templates/       # Workflow templates injected into user repos
+    workflows/
+      deploy.yml   # PR preview deploy (sst deploy --stage pr-N)
+      teardown.yml # PR close cleanup (sst remove --stage pr-N)
 ```
 
-Without global `turbo`, use your package manager:
+---
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for full dev environment setup — including how to create a test GitHub App, configure webhook forwarding with smee.io, and run each package locally.
+
+---
+
+## Deploying your own setup
+
+> **Note:** The steps below are the current manual flow. The onboarding dashboard (in progress) will handle the CloudFormation deployment and secret injection automatically — no CLI needed.
+
+### 1. OIDC role (one-time per AWS account)
+
+```bash
+aws cloudformation deploy \
+  --template-file packages/cfn-oidc/oidc-role.yml \
+  --stack-name 0xci-oidc \
+  --parameter-overrides GitHubOrg=<your-org> GitHubRepo=<your-repo> \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --region us-east-1
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Copy the `RoleArn` from the stack output and add it as `AWS_ROLE_ARN` in your GitHub repo secrets (Settings → Secrets → Actions). Once the onboarding dashboard ships, this step will be handled automatically via the GitHub API.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### 2. Deploy workflow
 
-```sh
-turbo build --filter=docs
-```
+The injected `.github/workflows/deploy.yml` handles everything automatically once the OIDC role is in place.
 
-Without global `turbo`:
+---
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## Stack
 
-### Develop
+| Layer | Tech |
+|---|---|
+| GitHub App | [Probot](https://probot.github.io) |
+| IaC | [SST v4](https://sst.dev) |
+| Bundler | [OpenNext](https://opennext.js.org) |
+| Auth | AWS OIDC (no stored keys) |
+| Portal | Next.js 16 on Lambda + CloudFront |
+| DNS | Route 53 |
 
-To develop all apps and packages, run the following command:
+---
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+## License
 
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+MIT
