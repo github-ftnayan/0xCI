@@ -1,4 +1,4 @@
-# <img src="apps/portal/app/icon.svg" width="24" height="24" valign="middle"> 0xCI
+# <img src="apps/portal/app/icon.svg" width="36" height="36" valign="middle"> 0xCI
 
 **Zero-config GitHub App for AWS preview deployments.**
 
