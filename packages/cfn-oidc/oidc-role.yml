@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
-  Creates an IAM OIDC Identity Provider for GitHub Actions and an IAM Role
-  that GitHub Actions workflows can assume via OIDC (no long-lived keys).
+  Creates an IAM OIDC Identity Provider for GitHub Actions (or reuses an existing one)
+  and an IAM Role that GitHub Actions workflows can assume via OIDC (no long-lived keys).
 
 Parameters:
   GitHubOrg:
@@ -15,26 +15,72 @@ Parameters:
     Type: String
     Default: 0xci-deploy-role
     Description: Name of the IAM Role to create
-  OIDCProviderArn:
-    Type: String
-    Default: ""
-    Description: >
-      ARN of an existing GitHub OIDC provider in this account. Leave blank to
-      create one. AWS only allows one OIDC provider per issuer URL per account.
-
-Conditions:
-  CreateOIDCProvider: !Equals [!Ref OIDCProviderArn, ""]
 
 Resources:
-  GitHubOIDCProvider:
-    Type: AWS::IAM::OIDCProvider
-    Condition: CreateOIDCProvider
+  # Lambda execution role — minimal permissions to create/get OIDC provider
+  OIDCFunctionRole:
+    Type: AWS::IAM::Role
     Properties:
-      Url: https://token.actions.githubusercontent.com
-      ClientIdList:
-        - sts.amazonaws.com
-      ThumbprintList:
-        - 1c58a3a8518e8759bf075b76b750d4f2df264fcd
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: OIDCProviderAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:CreateOpenIDConnectProvider
+                  - iam:GetOpenIDConnectProvider
+                Resource: "*"
+
+  # Lambda that creates the OIDC provider or returns the existing one
+  OIDCProviderFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt OIDCFunctionRole.Arn
+      Timeout: 30
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+
+          ISSUER = "token.actions.githubusercontent.com"
+          URL = f"https://{ISSUER}"
+
+          def handler(event, context):
+            iam = boto3.client("iam")
+            account_id = context.invoked_function_arn.split(":")[4]
+            arn = f"arn:aws:iam::{account_id}:oidc-provider/{ISSUER}"
+
+            if event["RequestType"] == "Delete":
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+              return
+
+            try:
+              iam.create_open_id_connect_provider(
+                Url=URL,
+                ClientIDList=["sts.amazonaws.com"],
+                ThumbprintList=["1c58a3a8518e8759bf075b76b750d4f2df264fcd"],
+              )
+            except iam.exceptions.EntityAlreadyExistsException:
+              pass  # Reuse the existing provider
+
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, {"Arn": arn}, arn)
+
+  OIDCProvider:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !GetAtt OIDCProviderFunction.Arn
 
   DeployRole:
     Type: AWS::IAM::Role
@@ -45,10 +91,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Federated: !If
-                - CreateOIDCProvider
-                - !Ref GitHubOIDCProvider
-                - !Ref OIDCProviderArn
+              Federated: !GetAtt OIDCProvider.Arn
             Action: sts:AssumeRoleWithWebIdentity
             Condition:
               StringEquals:
@@ -84,6 +127,5 @@ Resources:
 
 Outputs:
   RoleArn:
-    Description: >
-      Copy this ARN and add it as AWS_ROLE_ARN in your GitHub repository secrets.
+    Description: ARN of the created deploy role — injected automatically as AWS_ROLE_ARN.
     Value: !GetAtt DeployRole.Arn
