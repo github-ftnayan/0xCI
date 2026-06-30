@@ -137,6 +137,70 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Why 0xCI ─────────────────────────────────────────── */}
+        <section className="py-24 px-container-margin">
+          <div className="max-w-5xl mx-auto flex flex-col gap-12">
+            <div className="text-center">
+              <p className="font-mono text-[11px] text-[#00ff88] tracking-[0.2em] uppercase mb-3">
+                The case for your own cloud
+              </p>
+              <h2 className="font-headline-md text-headline-md text-[#F0F0F8] tracking-tight">
+                Why not Vercel?
+              </h2>
+              <p className="text-[#8888A8] mt-4 max-w-xl mx-auto text-sm leading-relaxed">
+                Managed platforms trade your infrastructure control for convenience — and charge a premium for it. 0xCI gives you the same DX on your own AWS account.
+              </p>
+            </div>
+
+            {/* Comparison table */}
+            <div className="overflow-x-auto rounded-xl border border-[#2A2A38]">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[#2A2A38]">
+                    <th className="text-left px-6 py-4 text-[#8888A8] font-mono text-xs tracking-widest uppercase w-1/4"></th>
+                    <th className="px-6 py-4 text-[#8888A8] font-mono text-xs tracking-widest uppercase text-center">Vercel Pro</th>
+                    <th className="px-6 py-4 text-[#8888A8] font-mono text-xs tracking-widest uppercase text-center">Netlify Pro</th>
+                    <th className="px-6 py-4 font-mono text-xs tracking-widest uppercase text-center text-[#00ff88] bg-[#00ff88]/5">0xCI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["Base price", "$20/seat/mo", "$19/seat/mo", <span key="p" className="text-[#00ff88] font-bold">$0</span>],
+                    ["Bandwidth", "$0.15/GB after 1 TB", "$0.55/GB after 100 GB", "~$0.11/GB (CloudFront)"],
+                    ["Preview environments", "✓", "✓", "✓"],
+                    ["Your own AWS account", "✗", "✗", <span key="a" className="text-[#00ff88]">✓</span>],
+                    ["Data sovereignty", "✗", "✗", <span key="d" className="text-[#00ff88]">✓</span>],
+                    ["No vendor lock-in", "✗", "✗", <span key="v" className="text-[#00ff88]">✓</span>],
+                    ["Long-lived secrets", "Required", "Required", <span key="s" className="text-[#00ff88]">Never — OIDC only</span>],
+                  ].map(([feature, vercel, netlify, us], i) => (
+                    <tr key={i} className="border-b border-[#2A2A38]/50 last:border-0 hover:bg-white/[0.02] transition-colors">
+                      <td className="px-6 py-4 text-[#8888A8] font-mono text-xs">{feature}</td>
+                      <td className="px-6 py-4 text-[#F0F0F8]/50 text-center text-xs">{vercel}</td>
+                      <td className="px-6 py-4 text-[#F0F0F8]/50 text-center text-xs">{netlify}</td>
+                      <td className="px-6 py-4 text-center text-xs bg-[#00ff88]/[0.03] font-medium text-[#F0F0F8]">{us}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Cost callout */}
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                { label: "Under 1M visitors/mo", cost: "~$0.50", sub: "Just Route 53 hosted zone" },
+                { label: "At 1M visitors/mo", cost: "~$5", sub: "vs $40+ on managed platforms" },
+                { label: "At 10M visitors/mo", cost: "~$300", sub: "vs $500–1,000+ on managed platforms" },
+              ].map(({ label, cost, sub }) => (
+                <div key={label} className="bg-[#1A1A24] border border-[#2A2A38] rounded-xl p-6 flex flex-col gap-2 hover:border-[#00ff88]/30 transition-colors">
+                  <span className="font-mono text-[10px] text-[#8888A8] tracking-widest uppercase">{label}</span>
+                  <span className="font-mono text-3xl font-bold text-[#00ff88]">{cost}</span>
+                  <span className="text-[#8888A8] text-xs">{sub}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── Domain Finder ────────────────────────────────────── */}
         <DomainFinder />
 
