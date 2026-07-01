@@ -3,7 +3,10 @@
 export default $config({
   app(input) {
     return {
-      name: process.env.REPO_NAME ?? "app",
+      name: (() => {
+        const raw = (process.env.REPO_NAME ?? "app").toLowerCase().replace(/[^a-z0-9-]/g, "-");
+        return /^[a-z]/.test(raw) ? raw : `app-${raw}`;
+      })(),
       home: "aws",
       removal: input?.stage?.startsWith("pr-") ? "remove" : "retain",
     };
