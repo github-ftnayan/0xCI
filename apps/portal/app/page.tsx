@@ -45,15 +45,15 @@ export default function Home() {
 
           {/* H1 */}
           <h1 className="font-display-lg text-display-lg text-[#F0F0F8] tracking-tight">
-            Deploy to AWS.{" "}
+            Vercel-style previews.{" "}
             <br className="hidden sm:block" />
-            <span className="text-[#8888A8] font-light">Skip the bill shock.</span>
+            <span className="text-[#8888A8] font-light">On your own AWS.</span>
           </h1>
 
           {/* Subtitle */}
           <p className="font-body-lg text-body-lg text-[#8888A8] max-w-2xl leading-relaxed">
-            0xCI is a zero-config GitHub App that gives every pull request its own live
-            preview URL — built on your own AWS account.
+            0xCI gives every pull request its own live preview URL — like Vercel, but
+            deployed to your AWS account. Zero config, no vendor lock-in.
           </p>
 
           {/* CTAs */}
