@@ -10,22 +10,7 @@ const TEMPLATES_DIR = process.env.LAMBDA_TASK_ROOT
 
 const SETUP_BRANCH = "0xci/setup";
 const PR_TITLE = "chore: add 0xCI deployment workflows";
-const PR_BODY = `## 0xCI Deployment Setup
-
-This PR adds automated preview deployments to your repository via [0xCI](https://0xci.dev).
-
-### What's included
-- \`.github/workflows/deploy.yml\` — deploys a preview environment on every PR
-- \`.github/workflows/teardown.yml\` — destroys the preview environment when a PR is closed
-- \`sst.config.ts\` — SST v3 infrastructure blueprint (auto-detects your framework)
-
-### Before merging
-1. **Deploy the AWS OIDC role** using the CloudFormation template from your [0xCI dashboard](https://0xci.dev/setup/aws)
-2. **Add the following GitHub secret** to this repository:
-   - \`AWS_ROLE_ARN\` — the role ARN output from the CloudFormation stack
-   - \`AWS_REGION\` — your preferred AWS region (e.g. \`us-east-1\`)
-
-Once merged, every pull request will get its own live preview URL posted as a comment. 🚀`;
+const PR_BODY = `## 0xCI Deployment Setup\n\nThis PR adds automated preview deployments via [0xCI](https://0xci.online).\n\nMerge to activate — every pull request will get its own live preview URL.`;
 
 function readTemplate(relativePath: string): string {
   return readFileSync(join(TEMPLATES_DIR, relativePath), "utf-8");
@@ -132,52 +117,50 @@ export async function injectWorkflows(
     parents: [baseSha],
   });
 
-  // Create (or update) the setup branch
+  // Try to push directly to the default branch; fall back to PR if branch-protected
   try {
-    await context.octokit.git.createRef({
+    await context.octokit.git.updateRef({
       owner,
       repo,
-      ref: `refs/heads/${SETUP_BRANCH}`,
+      ref: `heads/${defaultBranch}`,
       sha: commit.sha,
     });
+    log.info("Pushed 0xCI workflows directly to default branch");
   } catch (err: unknown) {
-    // Branch already exists — force update it
-    if (
-      err instanceof Error &&
-      "status" in err &&
-      (err as { status: number }).status === 422
-    ) {
-      await context.octokit.git.updateRef({
+    const status = err instanceof Error && "status" in err ? (err as { status: number }).status : 0;
+    if (status !== 403 && status !== 422) throw err;
+
+    // Branch protection active — fall back to PR
+    log.info("Branch protected, falling back to setup PR");
+    try {
+      await context.octokit.git.createRef({
         owner,
         repo,
-        ref: `heads/${SETUP_BRANCH}`,
+        ref: `refs/heads/${SETUP_BRANCH}`,
         sha: commit.sha,
-        force: true,
       });
-    } else {
-      throw err;
+    } catch (refErr: unknown) {
+      if (!(refErr instanceof Error && "status" in refErr && (refErr as { status: number }).status === 422)) throw refErr;
+      await context.octokit.git.updateRef({ owner, repo, ref: `heads/${SETUP_BRANCH}`, sha: commit.sha, force: true });
     }
-  }
 
-  // Open a PR (skip if one already exists)
-  const { data: existingPRs } = await context.octokit.pulls.list({
-    owner,
-    repo,
-    head: `${owner}:${SETUP_BRANCH}`,
-    state: "open",
-  });
-
-  if (existingPRs.length === 0) {
-    await context.octokit.pulls.create({
+    const { data: existingPRs } = await context.octokit.pulls.list({
       owner,
       repo,
-      title: PR_TITLE,
-      body: PR_BODY,
-      head: SETUP_BRANCH,
-      base: defaultBranch,
+      head: `${owner}:${SETUP_BRANCH}`,
+      state: "open",
     });
-    log.info("Opened 0xCI setup PR");
-  } else {
-    log.info("Setup PR already open, skipping");
+
+    if (existingPRs.length === 0) {
+      await context.octokit.pulls.create({
+        owner,
+        repo,
+        title: PR_TITLE,
+        body: PR_BODY,
+        head: SETUP_BRANCH,
+        base: defaultBranch,
+      });
+      log.info("Opened 0xCI setup PR");
+    }
   }
 }
