@@ -39,21 +39,22 @@ export default function Home() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00ff88]/30 bg-[#00ff88]/5">
             <span className="font-mono text-[11px] text-[#00ff88] tracking-[0.15em] uppercase">
-              Open Source · Built on SST v4 · GitHub Actions
+              The open-source Vercel alternative
             </span>
           </div>
 
           {/* H1 */}
-          <h1 className="font-display-lg text-display-lg text-[#F0F0F8] tracking-tight">
-            Vercel-style previews.{" "}
+          <h1 className="font-display-lg text-display-lg tracking-tight">
+            <span className="text-[#00ff88] font-bold">0x</span>
+            <span className="text-[#F0F0F8]">CI</span>
             <br className="hidden sm:block" />
-            <span className="text-[#8888A8] font-light">On your own AWS.</span>
+            <span className="text-[#8888A8] font-light">Preview deployments on your AWS.</span>
           </h1>
 
           {/* Subtitle */}
           <p className="font-body-lg text-body-lg text-[#8888A8] max-w-2xl leading-relaxed">
-            0xCI gives every pull request its own live preview URL — like Vercel, but
-            deployed to your AWS account. Zero config, no vendor lock-in.
+            Every pull request gets its own live preview URL — like Vercel, but deployed
+            to your own AWS account. Zero config, no vendor lock-in.
           </p>
 
           {/* CTAs */}
