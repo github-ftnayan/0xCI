@@ -1,10 +1,12 @@
 import type { Context } from "probot";
 import { readFileSync } from "fs";
-import { join, dirname } from "path";
+import { join } from "path";
 import { fileURLToPath } from "url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const TEMPLATES_DIR = join(__dirname, "../../../templates");
+// ponytail: LAMBDA_TASK_ROOT indicates Lambda environment where copyFiles lands at task root
+const TEMPLATES_DIR = process.env.LAMBDA_TASK_ROOT
+  ? join(process.env.LAMBDA_TASK_ROOT, "templates")
+  : fileURLToPath(new URL("../../../templates", import.meta.url));
 
 const SETUP_BRANCH = "0xci/setup";
 const PR_TITLE = "chore: add 0xCI deployment workflows";
