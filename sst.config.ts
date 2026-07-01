@@ -3,44 +3,46 @@
 export default $config({
   app(input) {
     return {
-      name: process.env.REPO_NAME ?? "app",
+      name: "hexci",
       home: "aws",
-      removal: input?.stage?.startsWith("pr-") ? "remove" : "retain",
+      region: "ap-south-1",
+      removal: input?.stage === "production" ? "retain" : "remove",
     };
   },
   async run() {
-    const { readFileSync } = await import("fs");
+    const githubClientId = new sst.Secret("GitHubClientId");
+    const githubClientSecret = new sst.Secret("GitHubClientSecret");
+    const appId = new sst.Secret("AppId");
+    const privateKey = new sst.Secret("PrivateKey");
+    const webhookSecret = new sst.Secret("WebhookSecret");
 
-    function detectFramework(): "nextjs" | "sveltekit" | "static" {
-      try {
-        const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
-        const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-        if (deps["next"]) return "nextjs";
-        if (deps["@sveltejs/kit"]) return "sveltekit";
-      } catch {}
-      return "static";
-    }
+    const webhook = new sst.aws.Function("Webhook", {
+      handler: "packages/probot-app/src/lambda.handler",
+      url: true,
+      timeout: "30 seconds",
+      copyFiles: [{ from: "packages/templates", to: "templates" }],
+      environment: {
+        APP_ID: appId.value,
+        PRIVATE_KEY: privateKey.value,
+        WEBHOOK_SECRET: webhookSecret.value,
+        NODE_ENV: "production",
+      },
+      nodejs: { format: "esm", install: ["probot", "adm-zip"] },
+    });
 
-    const framework = detectFramework();
+    const portal = new sst.aws.Nextjs("Portal", {
+      path: "apps/portal",
+      openNextVersion: "4.0.3",
+      domain: {
+        name: "0xci.online",
+        dns: sst.aws.dns(),
+      },
+      environment: {
+        GITHUB_CLIENT_ID: githubClientId.value,
+        GITHUB_CLIENT_SECRET: githubClientSecret.value,
+      },
+    });
 
-    let url: $util.Output<string>;
-
-    if (framework === "nextjs") {
-      const site = new sst.aws.Nextjs("Web");
-      url = site.url;
-    } else if (framework === "sveltekit") {
-      const site = new sst.aws.SvelteKit("Web");
-      url = site.url;
-    } else {
-      const site = new sst.aws.StaticSite("Web", {
-        build: {
-          command: "npm run build",
-          output: "dist",
-        },
-      });
-      url = site.url;
-    }
-
-    return { url };
+    return { url: portal.url, webhookUrl: webhook.url };
   },
 });
