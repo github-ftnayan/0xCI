@@ -3,6 +3,8 @@ name: 0xCI Deploy
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [main, master]
 
 permissions:
   id-token: write
@@ -15,7 +17,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.head_ref != '0xci/setup'
+    if: github.event_name == 'push' || github.head_ref != '0xci/setup'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,12 +44,14 @@ jobs:
       - name: Install SST providers
         run: npx sst install
 
-      - name: Deploy preview environment
+      - name: Deploy
         run: |
-          npx sst deploy --stage pr-${{ github.event.pull_request.number }} 2>&1 | tee /tmp/sst-out.txt
+          STAGE=${{ github.event_name == 'push' && 'production' || format('pr-{0}', github.event.pull_request.number) }}
+          npx sst deploy --stage $STAGE 2>&1 | tee /tmp/sst-out.txt
           cat /tmp/sst-out.txt
         env:
           REPO_NAME: ${{ github.event.repository.name }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
 
       - name: Save SST outputs
         run: |

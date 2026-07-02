@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-const NAV_LINKS = ["Docs", "Changelog", "Community"];
+const NAV_LINKS = [
+  { label: "Docs", href: "/docs" },
+  { label: "Changelog", href: "/changelog" },
+  { label: "Community", href: "https://github.com/github-ftnayan/0xCI/discussions" },
+];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -39,11 +43,11 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
           {NAV_LINKS.map((item) => (
             <a
-              key={item}
-              href="#"
+              key={item.label}
+              href={item.href}
               className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors duration-200"
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </nav>
@@ -84,12 +88,12 @@ export function Navbar() {
         <nav className="md:hidden border-t border-[#2A2A38] px-6 py-4 flex flex-col gap-4">
           {NAV_LINKS.map((item) => (
             <a
-              key={item}
-              href="#"
+              key={item.label}
+              href={item.href}
               onClick={() => setMenuOpen(false)}
               className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors py-1"
             >
-              {item}
+              {item.label}
             </a>
           ))}
           <div className="border-t border-[#2A2A38] pt-4 flex flex-col gap-3">

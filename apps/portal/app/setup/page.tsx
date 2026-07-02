@@ -4,16 +4,17 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 type Repo = { id: number; name: string; full_name: string; private: boolean };
-type Step = "loading" | "pick-repo" | "aws-setup" | "done" | "error";
+type Step = "loading" | "pick-repo" | "aws-setup" | "nameservers" | "done" | "error";
 
 const CFN_TEMPLATE_URL = "https://0xci-templates.s3.amazonaws.com/oidc-role.yml";
 
-function cfnLaunchUrl(owner: string) {
+function cfnLaunchUrl(owner: string, domain: string) {
   const params = new URLSearchParams({
     templateURL: CFN_TEMPLATE_URL,
-    stackName: "hexci-oidc",
+    stackName: "0xci-oidc",
     param_GitHubOrg: owner,
     param_GitHubRepo: "*",
+    ...(domain ? { param_DomainName: domain } : {}),
   });
   return `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?${params}`;
 }
@@ -27,6 +28,7 @@ function SetupWizard() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [accountId, setAccountId] = useState("");
   const [region, setRegion] = useState("us-east-1");
+  const [domain, setDomain] = useState("");
   const [error, setError] = useState("");
   const [injecting, setInjecting] = useState(false);
   const [roleArn, setRoleArn] = useState("");
@@ -88,6 +90,7 @@ function SetupWizard() {
           }),
           accountId,
           region,
+          domain: domain.trim() || undefined,
         }),
       });
 
@@ -106,7 +109,7 @@ function SetupWizard() {
 
       setRoleArn(data.roleArn);
       setDoneRepos(selectedRepos.map((r) => r.full_name));
-      setStep("done");
+      setStep(domain.trim() ? "nameservers" : "done");
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -128,13 +131,13 @@ function SetupWizard() {
         {/* Progress dots */}
         {step !== "error" && (
           <div className="flex items-center justify-center gap-2 mb-10">
-            {(["pick-repo", "aws-setup", "done"] as Step[]).map((s, i) => (
+            {(["pick-repo", "aws-setup", ...(domain.trim() ? ["nameservers"] : []), "done"] as Step[]).map((s, i, arr) => (
               <div
                 key={s}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   step === s
                     ? "w-6 bg-[#00ff88]"
-                    : step === "done" || i < ["pick-repo", "aws-setup", "done"].indexOf(step)
+                    : step === "done" || i < arr.indexOf(step)
                     ? "w-3 bg-[#00ff88]/40"
                     : "w-3 bg-[#2A2A38]"
                 }`}
@@ -247,7 +250,7 @@ function SetupWizard() {
                 No long-lived keys stored anywhere.
               </p>
               <a
-                href={cfnLaunchUrl(firstOwner)}
+                href={cfnLaunchUrl(firstOwner, domain)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-4 py-2.5 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all text-sm w-fit"
@@ -290,6 +293,13 @@ function SetupWizard() {
                 <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
                 <option value="ap-northeast-1">ap-northeast-1 (Tokyo)</option>
               </select>
+              <input
+                type="text"
+                placeholder="myapp.com (optional — for production deploys)"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value.toLowerCase().trim())}
+                className="font-mono bg-[#0A0A0F] border border-[#2A2A38] focus:border-[#00ff88]/50 rounded-md px-4 py-2.5 text-[#F0F0F8] text-sm outline-none transition-colors placeholder:text-[#8888A8]/30 w-full"
+              />
               {error && <p className="text-red-400 text-xs">{error}</p>}
               <button
                 onClick={handleInject}
@@ -319,7 +329,54 @@ function SetupWizard() {
           </div>
         )}
 
-        {/* Step 3: Done */}
+        {/* Step 3: Nameservers (domain only) */}
+        {step === "nameservers" && (
+          <div className="flex flex-col gap-5">
+            <div>
+              <h1 className="text-[#F0F0F8] font-bold text-xl mb-1">Set your nameservers</h1>
+              <p className="text-[#8888A8] text-sm">
+                A Route 53 hosted zone was created for{" "}
+                <span className="font-mono text-[#F0F0F8]">{domain}</span>. Copy the 4 nameservers from your CloudFormation stack and set them at your domain registrar.
+              </p>
+            </div>
+
+            <div className="bg-[#1A1A24] border border-[#2A2A38] rounded-xl p-5 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#00ff88] text-lg">dns</span>
+                <span className="text-[#F0F0F8] text-sm font-medium">Where to find your nameservers</span>
+              </div>
+              <ol className="flex flex-col gap-2 text-[#8888A8] text-xs leading-relaxed list-decimal list-inside">
+                <li>Open the CloudFormation console and go to your <span className="font-mono text-[#F0F0F8]">0xci-oidc</span> stack</li>
+                <li>Click the <span className="font-mono text-[#F0F0F8]">Outputs</span> tab</li>
+                <li>Copy the 4 values from <span className="font-mono text-[#F0F0F8]">NameServers</span></li>
+                <li>Go to your domain registrar and replace the nameservers with these 4 values</li>
+              </ol>
+              <a
+                href="https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-[#00ff88] text-sm font-mono hover:underline w-fit"
+              >
+                Open CloudFormation
+                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              </a>
+            </div>
+
+            <div className="bg-[#1A1A24] border border-[#2A2A38] rounded-xl p-4 text-xs text-[#8888A8] leading-relaxed">
+              DNS propagation usually takes 5–60 minutes. Once done, merging to main will deploy to <span className="font-mono text-[#F0F0F8]">{domain}</span> automatically.
+            </div>
+
+            <button
+              onClick={() => setStep("done")}
+              className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-5 py-2.5 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all text-sm w-fit"
+            >
+              I&apos;ve updated my nameservers
+              <span className="material-symbols-outlined text-[16px] leading-none">arrow_forward</span>
+            </button>
+          </div>
+        )}
+
+        {/* Step 4: Done */}
         {step === "done" && (
           <div className="flex flex-col gap-6 text-center">
             <div className="w-16 h-16 rounded-full bg-[#00ff88]/10 border border-[#00ff88]/30 flex items-center justify-center mx-auto">

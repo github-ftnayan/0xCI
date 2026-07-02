@@ -25,21 +25,25 @@ export default $config({
     }
 
     const framework = detectFramework();
+    const isPR = $app.stage.startsWith("pr-");
+    const domain = !isPR && process.env.DOMAIN_NAME ? process.env.DOMAIN_NAME : undefined;
 
     let url: $util.Output<string>;
 
     if (framework === "nextjs") {
-      const site = new sst.aws.Nextjs("Web");
+      const site = new sst.aws.Nextjs("Web", {
+        ...(domain ? { domain: { name: domain, dns: sst.aws.dns() } } : {}),
+      });
       url = site.url;
     } else if (framework === "sveltekit") {
-      const site = new sst.aws.SvelteKit("Web");
+      const site = new sst.aws.SvelteKit("Web", {
+        ...(domain ? { domain: { name: domain, dns: sst.aws.dns() } } : {}),
+      });
       url = site.url;
     } else {
       const site = new sst.aws.StaticSite("Web", {
-        build: {
-          command: "npm run build",
-          output: "dist",
-        },
+        build: { command: "npm run build", output: "dist" },
+        ...(domain ? { domain: { name: domain, dns: sst.aws.dns() } } : {}),
       });
       url = site.url;
     }

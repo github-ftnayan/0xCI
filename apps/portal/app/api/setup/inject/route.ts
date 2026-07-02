@@ -30,7 +30,8 @@ async function injectSecret(
   owner: string,
   repo: string,
   roleArn: string,
-  region: string
+  region: string,
+  domain?: string
 ): Promise<{ repo: string; error?: string }> {
   const keyRes = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/actions/secrets/public-key`,
@@ -47,17 +48,18 @@ async function injectSecret(
 
   const { key, key_id } = (await keyRes.json()) as { key: string; key_id: string };
 
-  const [encRoleArn, encRegion] = await Promise.all([
-    encryptSecret(key, roleArn),
-    encryptSecret(key, region),
-  ]);
+  const secrets: Array<[string, string]> = [
+    ["AWS_ROLE_ARN", roleArn],
+    ["AWS_REGION", region],
+    ...(domain ? [["DOMAIN_NAME", domain] as [string, string]] : []),
+  ];
 
-  const [ok1, ok2] = await Promise.all([
-    putSecret(token, owner, repo, "AWS_ROLE_ARN", roleArn, key_id, encRoleArn),
-    putSecret(token, owner, repo, "AWS_REGION", region, key_id, encRegion),
-  ]);
+  const encrypted = await Promise.all(secrets.map(([, v]) => encryptSecret(key, v)));
+  const results = await Promise.all(
+    secrets.map(([name, value], i) => putSecret(token, owner, repo, name, value, key_id, encrypted[i]!))
+  );
 
-  if (!ok1 || !ok2) return { repo, error: "failed_to_inject_secret" };
+  if (results.some((ok) => !ok)) return { repo, error: "failed_to_inject_secret" };
   return { repo };
 }
 
@@ -67,10 +69,11 @@ export async function POST(req: NextRequest) {
   if (!token) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
 
   const body = await req.json();
-  const { repos, accountId, region } = body as {
+  const { repos, accountId, region, domain } = body as {
     repos: Array<{ owner: string; repo: string }>;
     accountId: string;
     region: string;
+    domain?: string;
   };
 
   if (!repos?.length || !/^\d{12}$/.test(accountId) || !region) {
@@ -80,7 +83,7 @@ export async function POST(req: NextRequest) {
   const roleArn = `arn:aws:iam::${accountId}:role/0xci-deploy-role`;
 
   const results = await Promise.all(
-    repos.map(({ owner, repo }) => injectSecret(token, owner, repo, roleArn, region))
+    repos.map(({ owner, repo }) => injectSecret(token, owner, repo, roleArn, region, domain))
   );
 
   const failed = results.filter((r) => r.error);
