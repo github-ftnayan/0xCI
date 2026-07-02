@@ -293,7 +293,6 @@ function SetupWizard() {
                 <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
                 <option value="ap-northeast-1">ap-northeast-1 (Tokyo)</option>
               </select>
-<<<<<<< HEAD
               <input
                 type="text"
                 placeholder="myapp.com (optional — for production deploys)"
@@ -301,8 +300,6 @@ function SetupWizard() {
                 onChange={(e) => setDomain(e.target.value.toLowerCase().trim())}
                 className="font-mono bg-[#0A0A0F] border border-[#2A2A38] focus:border-[#00ff88]/50 rounded-md px-4 py-2.5 text-[#F0F0F8] text-sm outline-none transition-colors placeholder:text-[#8888A8]/30 w-full"
               />
-=======
->>>>>>> origin/main
               {error && <p className="text-red-400 text-xs">{error}</p>}
               <button
                 onClick={handleInject}
