@@ -26,6 +26,7 @@ function SetupWizard() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [accountId, setAccountId] = useState("");
+  const [region, setRegion] = useState("us-east-1");
   const [error, setError] = useState("");
   const [injecting, setInjecting] = useState(false);
   const [roleArn, setRoleArn] = useState("");
@@ -86,6 +87,7 @@ function SetupWizard() {
             return { owner, repo };
           }),
           accountId,
+          region,
         }),
       });
 
@@ -275,10 +277,23 @@ function SetupWizard() {
                 onChange={(e) => setAccountId(e.target.value.replace(/\D/g, "").slice(0, 12))}
                 className="font-mono bg-[#0A0A0F] border border-[#2A2A38] focus:border-[#00ff88]/50 rounded-md px-4 py-2.5 text-[#F0F0F8] text-sm outline-none transition-colors placeholder:text-[#8888A8]/30 w-full"
               />
+              <select
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                className="font-mono bg-[#0A0A0F] border border-[#2A2A38] focus:border-[#00ff88]/50 rounded-md px-4 py-2.5 text-[#F0F0F8] text-sm outline-none transition-colors w-full"
+              >
+                <option value="us-east-1">us-east-1 (N. Virginia)</option>
+                <option value="us-west-2">us-west-2 (Oregon)</option>
+                <option value="eu-west-1">eu-west-1 (Ireland)</option>
+                <option value="eu-central-1">eu-central-1 (Frankfurt)</option>
+                <option value="ap-south-1">ap-south-1 (Mumbai)</option>
+                <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
+                <option value="ap-northeast-1">ap-northeast-1 (Tokyo)</option>
+              </select>
               {error && <p className="text-red-400 text-xs">{error}</p>}
               <button
                 onClick={handleInject}
-                disabled={accountId.length !== 12 || injecting}
+                disabled={accountId.length !== 12 || !region || injecting}
                 className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-4 py-2.5 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all text-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none w-fit"
               >
                 {injecting ? (

@@ -8,9 +8,8 @@ permissions:
   id-token: write
   contents: read
 
-# Prevent this from racing with a deploy on the same PR
 concurrency:
-  group: sst-${{ github.repository }}-pr-${{ github.event.pull_request.number }}
+  group: sst-teardown-${{ github.repository }}-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
 jobs:
