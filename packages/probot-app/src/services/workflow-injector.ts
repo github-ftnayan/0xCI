@@ -9,25 +9,41 @@ const TEMPLATES_DIR = process.env.LAMBDA_TASK_ROOT
   : fileURLToPath(new URL("../../../templates", import.meta.url));
 
 const SETUP_BRANCH = "0xci/setup";
-const PR_TITLE = "chore: add 0xCI deployment workflows";
-const PR_BODY = `## 0xCI Deployment Setup\n\nThis PR adds automated preview deployments via [0xCI](https://0xci.online).\n\nMerge to activate — every pull request will get its own live preview URL.`;
+const PR_TITLE_INITIAL = "chore: add 0xCI deployment workflows";
+const PR_TITLE_UPDATE = "chore: update 0xCI deployment workflows";
+const PR_BODY_INITIAL = `## 0xCI Deployment Setup\n\nThis PR adds automated preview deployments via [0xCI](https://0xci.online).\n\nMerge to activate — every pull request will get its own live preview URL.`;
+const PR_BODY_UPDATE = `## 0xCI Template Update\n\nThis PR updates the 0xCI deployment workflows to the latest template version.\n\nMerge to apply the latest fixes and improvements.`;
+
+// Bumped whenever templates change in a way that requires re-injection into existing repos.
+const TEMPLATE_VERSION = 2;
 
 function readTemplate(relativePath: string): string {
   return readFileSync(join(TEMPLATES_DIR, relativePath), "utf-8");
 }
 
-async function fileExists(
+function extractVersion(content: string): number {
+  const match = content.match(/(?:#|\/\/) 0xci-version: (\d+)/);
+  return match ? parseInt(match[1]!, 10) : 0;
+}
+
+async function getInstalledVersion(
   context: Context,
   owner: string,
   repo: string,
-  path: string,
   ref: string
-): Promise<boolean> {
+): Promise<number> {
   try {
-    await context.octokit.repos.getContent({ owner, repo, path, ref });
-    return true;
+    const { data } = await context.octokit.repos.getContent({
+      owner,
+      repo,
+      path: ".github/workflows/deploy.yml",
+      ref,
+    });
+    if (!("content" in data)) return 0;
+    const content = Buffer.from(data.content, "base64").toString("utf-8");
+    return extractVersion(content);
   } catch {
-    return false;
+    return -1; // file doesn't exist
   }
 }
 
@@ -39,18 +55,19 @@ export async function injectWorkflows(
 ): Promise<void> {
   const log = context.log.child({ owner, repo });
 
-  // Skip if workflows already exist (re-installation guard)
-  const alreadyExists = await fileExists(
-    context,
-    owner,
-    repo,
-    ".github/workflows/deploy.yml",
-    defaultBranch
-  );
-  if (alreadyExists) {
-    log.info("0xCI workflows already present, skipping injection");
+  const installedVersion = await getInstalledVersion(context, owner, repo, defaultBranch);
+
+  if (installedVersion === TEMPLATE_VERSION) {
+    log.info("0xCI workflows are up to date, skipping injection");
     return;
   }
+
+  const isUpdate = installedVersion > 0;
+  log.info(
+    isUpdate
+      ? `Updating 0xCI workflows from v${installedVersion} to v${TEMPLATE_VERSION}`
+      : "Injecting 0xCI workflows for the first time"
+  );
 
   // Get the SHA of the default branch HEAD
   const { data: refData } = await context.octokit.git.getRef({
@@ -108,11 +125,15 @@ export async function injectWorkflows(
     })),
   });
 
+  const commitMessage = isUpdate
+    ? `chore: update 0xCI deployment workflows to v${TEMPLATE_VERSION}`
+    : "chore: add 0xCI deployment workflows";
+
   // Create a commit
   const { data: commit } = await context.octokit.git.createCommit({
     owner,
     repo,
-    message: "chore: add 0xCI deployment workflows",
+    message: commitMessage,
     tree: tree.sha,
     parents: [baseSha],
   });
@@ -125,7 +146,11 @@ export async function injectWorkflows(
       ref: `heads/${defaultBranch}`,
       sha: commit.sha,
     });
-    log.info("Pushed 0xCI workflows directly to default branch");
+    log.info(
+      isUpdate
+        ? `Updated 0xCI workflows to v${TEMPLATE_VERSION} directly on default branch`
+        : "Pushed 0xCI workflows directly to default branch"
+    );
   } catch (err: unknown) {
     const status = err instanceof Error && "status" in err ? (err as { status: number }).status : 0;
     if (status !== 403 && status !== 422) throw err;
@@ -155,12 +180,12 @@ export async function injectWorkflows(
       await context.octokit.pulls.create({
         owner,
         repo,
-        title: PR_TITLE,
-        body: PR_BODY,
+        title: isUpdate ? PR_TITLE_UPDATE : PR_TITLE_INITIAL,
+        body: isUpdate ? PR_BODY_UPDATE : PR_BODY_INITIAL,
         head: SETUP_BRANCH,
         base: defaultBranch,
       });
-      log.info("Opened 0xCI setup PR");
+      log.info(isUpdate ? "Opened 0xCI update PR" : "Opened 0xCI setup PR");
     }
   }
 }

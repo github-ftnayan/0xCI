@@ -1,4 +1,5 @@
 /// <reference path="./.sst/platform/config.d.ts" />
+// 0xci-version: 2
 
 export default $config({
   app(input) {

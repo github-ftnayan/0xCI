@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 type Repo = { id: number; name: string; full_name: string; private: boolean };
-type Step = "loading" | "pick-repo" | "aws-setup" | "nameservers" | "done" | "error";
+type Step = "loading" | "aws-setup" | "nameservers" | "done" | "error";
 
 const CFN_TEMPLATE_URL = "https://0xci-templates.s3.amazonaws.com/oidc-role.yml";
 
@@ -25,7 +25,6 @@ function SetupWizard() {
 
   const [step, setStep] = useState<Step>("loading");
   const [repos, setRepos] = useState<Repo[]>([]);
-  const [selected, setSelected] = useState<Set<number>>(new Set());
   const [accountId, setAccountId] = useState("");
   const [region, setRegion] = useState("us-east-1");
   const [domain, setDomain] = useState("");
@@ -54,8 +53,7 @@ function SetupWizard() {
           return;
         }
         setRepos(data.repos);
-        setSelected(new Set(data.repos.map((r: Repo) => r.id)));
-        setStep("pick-repo");
+        setStep("aws-setup");
       })
       .catch(() => {
         setError("Network error. Please try again.");
@@ -63,15 +61,7 @@ function SetupWizard() {
       });
   }, [installationId]);
 
-  function toggleRepo(id: number) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }
-
-  const selectedRepos = repos.filter((r) => selected.has(r.id));
+  const selectedRepos = repos;
   const firstOwner = selectedRepos[0]?.full_name.split("/")[0] ?? "";
 
   async function handleInject() {
@@ -131,7 +121,7 @@ function SetupWizard() {
         {/* Progress dots */}
         {step !== "error" && (
           <div className="flex items-center justify-center gap-2 mb-10">
-            {(["pick-repo", "aws-setup", ...(domain.trim() ? ["nameservers"] : []), "done"] as Step[]).map((s, i, arr) => (
+            {(["aws-setup", ...(domain.trim() ? ["nameservers"] : []), "done"] as Step[]).map((s, i, arr) => (
               <div
                 key={s}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
@@ -165,66 +155,7 @@ function SetupWizard() {
           </div>
         )}
 
-        {/* Step 1: Pick repos */}
-        {step === "pick-repo" && (
-          <div className="flex flex-col gap-5">
-            <div>
-              <h1 className="text-[#F0F0F8] font-bold text-xl mb-1">Select repositories</h1>
-              <p className="text-[#8888A8] text-sm">
-                Choose which repos to enable preview deployments for.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-2 max-h-80 overflow-y-auto pr-1">
-              {repos.map((r) => {
-                const isSelected = selected.has(r.id);
-                return (
-                  <button
-                    key={r.id}
-                    onClick={() => toggleRepo(r.id)}
-                    className={`flex items-center gap-3 border rounded-lg px-4 py-3 text-left transition-colors ${
-                      isSelected
-                        ? "bg-[#00ff88]/[0.05] border-[#00ff88]/40"
-                        : "bg-[#1A1A24] border-[#2A2A38] hover:border-[#00ff88]/20"
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
-                        isSelected ? "bg-[#00ff88] border-[#00ff88]" : "border-[#4A4A58]"
-                      }`}
-                    >
-                      {isSelected && (
-                        <span className="material-symbols-outlined text-[#0A0A0F] text-[12px]">
-                          check
-                        </span>
-                      )}
-                    </div>
-                    <span className="material-symbols-outlined text-[#8888A8] text-lg shrink-0">
-                      {r.private ? "lock" : "folder_open"}
-                    </span>
-                    <span className="font-mono text-sm text-[#F0F0F8] truncate">{r.full_name}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-[#8888A8] text-xs">
-                {selected.size} of {repos.length} selected
-              </span>
-              <button
-                onClick={() => setStep("aws-setup")}
-                disabled={selected.size === 0}
-                className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-5 py-2.5 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all text-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
-              >
-                Continue
-                <span className="material-symbols-outlined text-[16px] leading-none">arrow_forward</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: AWS setup */}
+        {/* Step 1: AWS setup */}
         {step === "aws-setup" && (
           <div className="flex flex-col gap-5">
             <div>
@@ -232,7 +163,7 @@ function SetupWizard() {
               <p className="text-[#8888A8] text-sm">
                 Enabling previews for{" "}
                 <span className="font-mono text-[#F0F0F8]">
-                  {selected.size} repo{selected.size !== 1 ? "s" : ""}
+                  {repos.length} repo{repos.length !== 1 ? "s" : ""}
                 </span>
               </p>
             </div>
@@ -320,16 +251,10 @@ function SetupWizard() {
               </button>
             </div>
 
-            <button
-              onClick={() => { setStep("pick-repo"); setError(""); }}
-              className="text-[#8888A8] text-xs font-mono hover:text-[#F0F0F8] transition-colors text-left"
-            >
-              ← Change selection
-            </button>
           </div>
         )}
 
-        {/* Step 3: Nameservers (domain only) */}
+        {/* Step 2: Nameservers (domain only) */}
         {step === "nameservers" && (
           <div className="flex flex-col gap-5">
             <div>
@@ -376,7 +301,7 @@ function SetupWizard() {
           </div>
         )}
 
-        {/* Step 4: Done */}
+        {/* Step 3: Done */}
         {step === "done" && (
           <div className="flex flex-col gap-6 text-center">
             <div className="w-16 h-16 rounded-full bg-[#00ff88]/10 border border-[#00ff88]/30 flex items-center justify-center mx-auto">
