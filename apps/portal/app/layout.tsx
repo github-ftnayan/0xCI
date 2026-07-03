@@ -14,12 +14,12 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "0xCI — Deploy to AWS. Skip the bill shock.",
+  title: "0xCI — AWS preview URLs for every pull request",
   description:
     "Zero-config GitHub App that gives every pull request its own live AWS preview URL. Powered by SST, secured by OIDC, built on your own account.",
   icons: { icon: "/icon.svg", shortcut: "/icon.svg" },
   openGraph: {
-    title: "0xCI — Deploy to AWS. Skip the bill shock.",
+    title: "0xCI — AWS preview URLs for every pull request",
     description:
       "Zero-config GitHub App that gives every pull request its own live AWS preview URL.",
     type: "website",

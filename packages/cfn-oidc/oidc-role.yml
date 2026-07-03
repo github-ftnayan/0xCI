@@ -123,6 +123,7 @@ Resources:
                   - iam:DeleteRolePolicy
                   - iam:GetRole
                   - iam:TagRole
+                  - iam:ListInstanceProfilesForRole
                 Resource: "*"
 
 Outputs:
