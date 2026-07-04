@@ -26,7 +26,6 @@ export default async function Image() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "14px",
             marginBottom: "40px",
           }}
         >
