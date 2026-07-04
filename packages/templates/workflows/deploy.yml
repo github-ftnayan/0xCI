@@ -1,4 +1,4 @@
-# 0xci-version: 2
+# 0xci-version: 3
 name: 0xCI Deploy
 
 on:
