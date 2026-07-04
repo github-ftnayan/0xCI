@@ -39,30 +39,33 @@ export function TerminalAnimation() {
             $ git push origin feature/checkout-page
           </div>
 
-          {/* Result lines — always in DOM, fade in */}
-          {LINES.slice(1).map((line, i) => (
-            <div
-              key={i}
-              className={`mt-2 transition-opacity duration-500 ${
-                visibleCount > i ? "opacity-100" : "opacity-0"
-              } ${line.type === "link" ? "text-[#3fe882]" : "text-[#8888A8]"}`}
-            >
-              {line.type === "link" ? (
-                <>
-                  <span className="text-[#00ff88] mr-2">✓</span>
-                  {"CloudFront · "}
-                  <a href="#" className="text-[#3fe882] hover:underline">
-                    https://pr-42.myapp.0xci.dev
-                  </a>
-                </>
-              ) : (
-                <>
-                  <span className="text-[#00ff88] mr-2">✓</span>
-                  {line.text.replace("✓ ", "")}
-                </>
-              )}
-            </div>
-          ))}
+          {/* Result lines — mounted only once revealed, so unrevealed
+              lines never exist as invisible (contrast-failing) DOM nodes */}
+          {LINES.slice(1).map((line, i) =>
+            visibleCount > i ? (
+              <div
+                key={i}
+                className={`mt-2 ${
+                  line.type === "link" ? "text-[#3fe882]" : "text-[#8888A8]"
+                }`}
+              >
+                {line.type === "link" ? (
+                  <>
+                    <span className="text-[#00ff88] mr-2">✓</span>
+                    {"CloudFront · "}
+                    <span className="text-[#3fe882]">
+                      https://pr-42.myapp.0xci.dev
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-[#00ff88] mr-2">✓</span>
+                    {line.text.replace("✓ ", "")}
+                  </>
+                )}
+              </div>
+            ) : null
+          )}
         </div>
       </div>
     </div>

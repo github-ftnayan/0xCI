@@ -154,7 +154,7 @@ export function DomainFinder() {
                 <span className="text-xs font-mono text-[#8888A8]">sst.config.ts</span>
                 <button
                   onClick={copy}
-                  className="text-xs font-mono text-[#8888A8] hover:text-[#00ff88] transition-colors p-2 -m-2"
+                  className="text-xs font-mono text-[#8888A8] hover:text-[#00ff88] transition-colors p-3.5 -m-3.5"
                 >
                   {copied ? "Copied!" : "Copy"}
                 </button>
