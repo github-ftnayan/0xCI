@@ -121,6 +121,42 @@ const SECTIONS = [
 const DOCS_INTRO =
   "Everything you need to deploy preview environments and production apps on your own AWS account.";
 
+function buildFaqSchema() {
+  const faqSection = SECTIONS.find((s) => s.id === "faq");
+  if (!faqSection) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqSection.content.map((item) => ({
+      "@type": "Question",
+      name: item.heading,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.body,
+      },
+    })),
+  };
+}
+
+function buildHowToSchema() {
+  const gettingStarted = SECTIONS.find((s) => s.id === "getting-started");
+  if (!gettingStarted) return null;
+  const steps = gettingStarted.content.filter((item) =>
+    /^\d+\./.test(item.heading),
+  );
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to deploy AWS preview URLs for pull requests with 0xCI",
+    description: DOCS_INTRO,
+    step: steps.map((item) => ({
+      "@type": "HowToStep",
+      name: item.heading.replace(/^\d+\.\s*/, ""),
+      text: item.body,
+    })),
+  };
+}
+
 function docsToMarkdown(): string {
   const lines: string[] = ["# 0xCI Docs", "", DOCS_INTRO, ""];
   for (const section of SECTIONS) {
@@ -134,9 +170,23 @@ function docsToMarkdown(): string {
 
 export default function DocsPage() {
   const markdown = docsToMarkdown();
+  const faqSchema = buildFaqSchema();
+  const howToSchema = buildHowToSchema();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0F]">
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+      {howToSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        />
+      )}
       <Navbar />
       <div className="flex-grow max-w-5xl mx-auto w-full px-6 pt-28 pb-24 flex gap-12">
         {/* Sidebar */}

@@ -18,7 +18,16 @@ export function JsonLd() {
         "@type": "Organization",
         name: "0xCI",
         url: "https://0xci.online",
-        sameAs: ["https://github.com/github-ftnayan/0xCI"],
+        logo: "https://0xci.online/icon.svg",
+        sameAs: [
+          "https://github.com/github-ftnayan/0xCI",
+          "https://github.com/github-ftnayan",
+        ],
+        founder: {
+          "@type": "Person",
+          name: "github-ftnayan",
+          url: "https://github.com/github-ftnayan",
+        },
       },
     ],
   };

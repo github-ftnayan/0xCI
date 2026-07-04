@@ -39,33 +39,34 @@ export function TerminalAnimation() {
             $ git push origin feature/checkout-page
           </div>
 
-          {/* Result lines — mounted only once revealed, so unrevealed
-              lines never exist as invisible (contrast-failing) DOM nodes */}
-          {LINES.slice(1).map((line, i) =>
-            visibleCount > i ? (
-              <div
-                key={i}
-                className={`mt-2 ${
-                  line.type === "link" ? "text-[#3fe882]" : "text-[#8888A8]"
-                }`}
-              >
-                {line.type === "link" ? (
-                  <>
-                    <span className="text-[#00ff88] mr-2">✓</span>
-                    {"CloudFront · "}
-                    <span className="text-[#3fe882]">
-                      https://pr-42.myapp.0xci.dev
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-[#00ff88] mr-2">✓</span>
-                    {line.text.replace("✓ ", "")}
-                  </>
-                )}
-              </div>
-            ) : null
-          )}
+          {/* Result lines: always in DOM so the terminal renders at full
+              height immediately. Unrevealed lines use visibility:hidden
+              rather than opacity-0 -- axe excludes visibility:hidden from
+              contrast checks (unlike opacity), so this can't fail
+              color-contrast while still reserving layout space. */}
+          {LINES.slice(1).map((line, i) => (
+            <div
+              key={i}
+              className={`mt-2 transition-opacity duration-500 ${
+                visibleCount > i ? "visible opacity-100" : "invisible opacity-0"
+              } ${line.type === "link" ? "text-[#3fe882]" : "text-[#8888A8]"}`}
+            >
+              {line.type === "link" ? (
+                <>
+                  <span className="text-[#00ff88] mr-2">✓</span>
+                  {"CloudFront · "}
+                  <span className="text-[#3fe882]">
+                    https://pr-42.myapp.0xci.dev
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-[#00ff88] mr-2">✓</span>
+                  {line.text.replace("✓ ", "")}
+                </>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

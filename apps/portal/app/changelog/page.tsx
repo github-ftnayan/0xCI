@@ -9,9 +9,37 @@ export const metadata: Metadata = {
 
 const ENTRIES = [
   {
+    version: "v0.6",
+    date: "2026-07-04",
+    tag: "Latest",
+    changes: [
+      { type: "feat", text: "FAQPage structured data added to the docs FAQ section for featured-snippet and AI answer-engine eligibility" },
+      { type: "feat", text: "HowTo structured data added to the getting-started steps" },
+      { type: "feat", text: "Organization schema expanded with logo, founder, and additional sameAs links" },
+      { type: "feat", text: "Homepage now states a plain-language definition of 0xCI up front, and the 3-step flow is marked up as a semantic list" },
+    ],
+  },
+  {
+    version: "v0.5",
+    date: "2026-07-04",
+    tag: null,
+    changes: [
+      { type: "feat", text: "Open Graph and Twitter card metadata, plus a dynamically generated preview image, for rich link previews" },
+      { type: "feat", text: "Security headers (HSTS, CSP, X-Frame-Options, and more) added to every response" },
+      { type: "feat", text: "sitemap.xml, robots.txt, canonical URLs, and JSON-LD structured data for search and AI answer engines" },
+      { type: "feat", text: "llms.txt with a short product summary for AI agents" },
+      { type: "feat", text: "New /privacy page describing exactly what data 0xCI handles" },
+      { type: "feat", text: "Copy as Markdown button on the docs page" },
+      { type: "feat", text: "Home link added to the nav" },
+      { type: "fix", text: "Fixed several accessibility issues found by an automated scan: color contrast, missing labels on icon-only links, duplicate landmark regions, and an empty table header" },
+      { type: "fix", text: "Enlarged small tap targets across the nav, footer, and docs sidebar for mobile" },
+      { type: "fix", text: "Footer links now point to real pages instead of placeholders" },
+    ],
+  },
+  {
     version: "v0.4",
     date: "2026-07-02",
-    tag: "Latest",
+    tag: null,
     changes: [
       { type: "feat", text: "Production deploys with custom domain — merge to main deploys to your domain via Route 53 + ACM automatically" },
       { type: "feat", text: "Route 53 hosted zone provisioned automatically via CloudFormation — no manual DNS setup required" },

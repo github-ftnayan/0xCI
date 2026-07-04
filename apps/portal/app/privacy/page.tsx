@@ -15,15 +15,15 @@ const SECTIONS = [
   },
   {
     title: "One functional cookie",
-    body: "When you use the setup wizard, we set a single short-lived (1 hour), httpOnly cookie holding your GitHub OAuth token. It's used only to call GitHub's API on your behalf while you connect a repository, and it isn't used for tracking. It expires automatically and is never written to a database — we don't have one.",
+    body: "When you use the setup wizard, we set a single short-lived (1 hour), httpOnly cookie holding your GitHub OAuth token. It's used only to call GitHub's API on your behalf while you connect a repository, and it isn't used for tracking. It expires automatically and is never written to a database, since we don't have one.",
   },
   {
     title: "No database",
-    body: "0xCI has no database. When the GitHub App processes a webhook (a pull request, a workflow run), it reads what it needs from the event payload — repo and org names, PR numbers, commit and workflow-run IDs — to trigger a deploy and post a status comment on your PR. None of it is stored; it's used in memory for that single event and discarded.",
+    body: "0xCI has no database. When the GitHub App processes a webhook (a pull request, a workflow run), it reads what it needs from the event payload (repo and org names, PR numbers, commit and workflow-run IDs) to trigger a deploy and post a status comment on your PR. None of it is stored; it's used in memory for that single event and discarded.",
   },
   {
     title: "AWS credentials never touch our servers",
-    body: "0xCI uses OpenID Connect (OIDC). AWS trusts short-lived tokens issued directly by GitHub Actions for your specific repository — that trust relationship never passes through 0xCI's infrastructure. The only AWS-related value our servers ever see is your account's role ARN (not a secret), plus a region and optional domain name, which the setup wizard writes as encrypted secrets directly into your own GitHub repository using GitHub's secrets API.",
+    body: "0xCI uses OpenID Connect (OIDC). AWS trusts short-lived tokens issued directly by GitHub Actions for your specific repository, and that trust relationship never passes through 0xCI's infrastructure. The only AWS-related value our servers ever see is your account's role ARN (not a secret), plus a region and optional domain name, which the setup wizard writes as encrypted secrets directly into your own GitHub repository using GitHub's secrets API.",
   },
   {
     title: "Domain availability lookups",
@@ -31,7 +31,7 @@ const SECTIONS = [
   },
   {
     title: "Questions",
-    body: "0xCI is open source. If you have a question about how something works, open an issue on GitHub — that's our only support channel.",
+    body: "0xCI is open source. If you have a question about how something works, open an issue on GitHub; that's our only support channel.",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
           </h1>
           <p className="text-[#8888A8] leading-relaxed">
             0xCI is a small, open-source project. This page describes exactly
-            what data we handle and why — no more, no less.
+            what data we handle and why, no more and no less.
           </p>
         </div>
 
