@@ -1,6 +1,7 @@
 import { Navbar } from "../components/Navbar";
 import { TerminalAnimation } from "../components/TerminalAnimation";
 import { DomainFinder } from "../components/DomainFinder";
+import { Icon } from "../components/Icon";
 
 const STEPS = [
   {
@@ -18,7 +19,7 @@ const STEPS = [
     title: "Ship",
     body: "Open a PR and get a live preview URL instantly. Merge with confidence, without the infrastructure headache.",
   },
-];
+] as const;
 
 function GitHubIcon() {
   return (
@@ -76,9 +77,7 @@ export default function Home() {
               className="bg-[#00ff88] text-[#0A0A0F] font-bold px-6 py-3 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all flex items-center justify-center gap-2"
             >
               Install GitHub App
-              <span className="material-symbols-outlined text-[18px] leading-none">
-                arrow_forward
-              </span>
+              <Icon name="arrow_forward" className="w-[18px] h-[18px]" />
             </a>
             <a
               href="https://github.com/github-ftnayan/0xCI"
@@ -111,9 +110,7 @@ export default function Home() {
                   className="flex flex-col items-center text-center gap-4 z-10"
                 >
                   <div className="w-24 h-24 rounded-full border border-[#2A2A38] bg-[#1A1A24] flex items-center justify-center transition-all hover:border-[#00ff88]/50 hover:bg-[#00ff88]/[0.06] hover:shadow-[0_0_24px_rgba(0,255,136,0.12)]">
-                    <span className="material-symbols-outlined text-4xl text-[#00ff88]">
-                      {step.icon}
-                    </span>
+                    <Icon name={step.icon} className="w-9 h-9 text-[#00ff88]" />
                   </div>
                   <h3 className="font-headline-sm text-headline-sm">
                     <span className="font-mono text-[#00ff88]">{i + 1}.</span>{" "}
@@ -138,9 +135,7 @@ export default function Home() {
                   </div>
                   <div className="relative z-10">
                     <div className="w-12 h-12 bg-[#1f1f25] rounded-lg flex items-center justify-center mb-4 border border-[#2A2A38] group-hover:border-[#00ff88]/40 transition-colors">
-                      <span className="material-symbols-outlined text-[#00ff88]">
-                        {step.icon}
-                      </span>
+                      <Icon name={step.icon} className="w-6 h-6 text-[#00ff88]" />
                     </div>
                     <h3 className="font-headline-sm text-headline-sm text-[#F0F0F8] mb-2">
                       {step.title}
@@ -321,9 +316,7 @@ export default function Home() {
             className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-8 py-4 rounded-md hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] transition-all text-lg"
           >
             Install GitHub App
-            <span className="material-symbols-outlined text-[20px] leading-none">
-              arrow_forward
-            </span>
+            <Icon name="arrow_forward" className="w-5 h-5" />
           </a>
         </section>
 
@@ -368,7 +361,7 @@ export default function Home() {
                 {label}
               </a>
             ))}
-            <span className="font-mono text-[11px] text-[#8888A8] ml-2 border-l border-[#2A2A38] pl-4 opacity-50">
+            <span className="font-mono text-[11px] text-[#8888A8] ml-2 border-l border-[#2A2A38] pl-4">
               MIT Licensed
             </span>
           </nav>

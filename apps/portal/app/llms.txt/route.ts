@@ -16,11 +16,11 @@ Developers and teams who want Vercel-style PR preview deployments without vendor
 
 ## Key links
 
-- Homepage: https://0xci.online
-- Docs: https://0xci.online/docs
-- Changelog: https://0xci.online/changelog
-- Source code: https://github.com/github-ftnayan/0xCI
-- Install the GitHub App: https://github.com/apps/0xci-hexci/installations/new
+- [Homepage](https://0xci.online)
+- [Docs](https://0xci.online/docs)
+- [Changelog](https://0xci.online/changelog)
+- [Source code](https://github.com/github-ftnayan/0xCI)
+- [Install the GitHub App](https://github.com/apps/0xci-hexci/installations/new)
 
 ## Pricing
 
