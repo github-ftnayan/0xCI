@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
+  { label: "Home", href: "/" },
   { label: "Docs", href: "/docs" },
   { label: "Changelog", href: "/changelog" },
   { label: "Community", href: "https://github.com/github-ftnayan/0xCI/discussions" },
@@ -48,7 +49,7 @@ export function Navbar() {
             <a
               key={item.label}
               href={item.href}
-              className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors duration-200"
+              className="inline-block py-2 -my-2 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors duration-200"
             >
               {item.label}
             </a>
@@ -62,7 +63,7 @@ export function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View on GitHub"
-            className="hidden md:flex items-center gap-1.5 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors"
+            className="hidden md:flex items-center gap-1.5 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors p-2 -m-2"
           >
             <GitHubIcon aria-hidden="true" />
           </a>
@@ -70,7 +71,7 @@ export function Navbar() {
             href="https://github.com/apps/0xci-hexci/installations/new"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-flex border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200"
+            className="hidden md:inline-flex border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2.5 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200"
           >
             Install App
           </a>
@@ -78,7 +79,7 @@ export function Navbar() {
           <button
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
-            className="md:hidden text-[#8888A8] hover:text-[#00ff88] transition-colors p-1"
+            className="md:hidden text-[#8888A8] hover:text-[#00ff88] transition-colors p-2"
           >
             <span className="material-symbols-outlined text-2xl">
               {menuOpen ? "close" : "menu"}
@@ -98,7 +99,7 @@ export function Navbar() {
               key={item.label}
               href={item.href}
               onClick={() => setMenuOpen(false)}
-              className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors py-1"
+              className="py-2.5 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors"
             >
               {item.label}
             </a>
@@ -108,16 +109,16 @@ export function Navbar() {
               href="https://github.com/github-ftnayan/0xCI"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors"
+              className="flex items-center gap-2 text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors py-2"
             >
-              <GitHubIcon />
+              <GitHubIcon aria-hidden="true" />
               View on GitHub
             </a>
             <a
               href="https://github.com/apps/0xci-hexci/installations/new"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200 text-center"
+              className="border border-[#00ff88] text-[#00ff88] bg-transparent px-4 py-2.5 text-sm font-medium rounded-md hover:bg-[#00ff88]/10 transition-all duration-200 text-center"
             >
               Install App
             </a>

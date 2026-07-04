@@ -348,13 +348,12 @@ export default function Home() {
           </div>
           <nav aria-label="Footer" className="flex flex-wrap justify-center gap-6">
             {[
-              { label: "Documentation", href: "#" },
+              { label: "Documentation", href: "/docs" },
               {
                 label: "GitHub",
                 href: "https://github.com/github-ftnayan/0xCI",
               },
-              { label: "Status", href: "#" },
-              { label: "Privacy", href: "#" },
+              { label: "Privacy", href: "/privacy" },
             ].map(({ label, href }) => (
               <a
                 key={label}
@@ -363,7 +362,7 @@ export default function Home() {
                 rel={
                   href.startsWith("http") ? "noopener noreferrer" : undefined
                 }
-                className="font-mono text-[11px] text-[#8888A8] hover:text-[#00ff88] transition-colors"
+                className="inline-block py-2 -my-2 font-mono text-[11px] text-[#8888A8] hover:text-[#00ff88] transition-colors"
               >
                 {label}
               </a>

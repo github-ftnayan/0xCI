@@ -22,7 +22,7 @@ export function TerminalAnimation() {
   }, []);
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-12 text-left">
+    <div aria-hidden="true" className="w-full max-w-3xl mx-auto mt-12 text-left">
       <div className="terminal-glass rounded-lg overflow-hidden shadow-2xl">
         {/* Title bar */}
         <div className="relative flex items-center gap-2 px-4 py-2.5 border-b border-[#2A2A38] bg-[#1A1A24]/50">
