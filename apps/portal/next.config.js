@@ -32,7 +32,7 @@ const nextConfig = {
               "connect-src 'self' https://api.github.com https://github.com",
               "frame-src https://github.com",
               "form-action 'self' https://github.com",
-              "frame-ancestors 'none'",
+              "frame-ancestors 'self' https://buildhop.io https://www.buildhop.io",
               "object-src 'none'",
               "base-uri 'self'",
               "upgrade-insecure-requests",
