@@ -9,9 +9,20 @@ export const metadata: Metadata = {
 
 const ENTRIES = [
   {
-    version: "v0.5",
+    version: "v0.6",
     date: "2026-07-04",
     tag: "Latest",
+    changes: [
+      { type: "feat", text: "FAQPage structured data added to the docs FAQ section for featured-snippet and AI answer-engine eligibility" },
+      { type: "feat", text: "HowTo structured data added to the getting-started steps" },
+      { type: "feat", text: "Organization schema expanded with logo, founder, and additional sameAs links" },
+      { type: "feat", text: "Homepage now states a plain-language definition of 0xCI up front, and the 3-step flow is marked up as a semantic list" },
+    ],
+  },
+  {
+    version: "v0.5",
+    date: "2026-07-04",
+    tag: null,
     changes: [
       { type: "feat", text: "Open Graph and Twitter card metadata, plus a dynamically generated preview image, for rich link previews" },
       { type: "feat", text: "Security headers (HSTS, CSP, X-Frame-Options, and more) added to every response" },

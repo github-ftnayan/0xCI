@@ -62,8 +62,9 @@ export default function Home() {
 
           {/* Subtitle */}
           <p className="font-body-lg text-body-lg text-[#8888A8] max-w-2xl leading-relaxed">
-            Every pull request gets its own live preview URL like Vercel, but
-            deployed to your own AWS account. Zero config, no vendor lock-in.
+            0xCI is a zero-config, open-source GitHub App that gives every
+            pull request its own live preview URL like Vercel, but deployed
+            to your own AWS account. Zero config, no vendor lock-in.
           </p>
 
           {/* CTAs */}
@@ -98,14 +99,14 @@ export default function Home() {
         <section className="py-24 px-container-margin">
           <div className="max-w-5xl mx-auto flex flex-col gap-12">
             <h2 className="font-headline-md text-headline-md text-[#F0F0F8] text-center tracking-tight">
-              How it works
+              How does 0xCI work?
             </h2>
 
             {/* Desktop layout: circular icons + connecting dashes */}
-            <div className="hidden md:grid grid-cols-3 gap-8 relative">
+            <ol className="hidden md:grid grid-cols-3 gap-8 relative list-none">
               <div className="absolute top-12 left-[16.67%] right-[16.67%] h-px border-t border-dashed border-[#2A2A38]/40 z-0" />
               {STEPS.map((step, i) => (
-                <div
+                <li
                   key={i}
                   className="flex flex-col items-center text-center gap-4 z-10"
                 >
@@ -121,14 +122,14 @@ export default function Home() {
                   <p className="text-[#8888A8] font-body-md text-sm leading-relaxed">
                     {step.body}
                   </p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
 
             {/* Mobile layout: cards with large number watermarks */}
-            <div className="grid md:hidden grid-cols-1 gap-4">
+            <ol className="grid md:hidden grid-cols-1 gap-4 list-none">
               {STEPS.map((step, i) => (
-                <div
+                <li
                   key={i}
                   className="relative bg-[#1A1A24] border border-[#2A2A38] p-6 rounded-xl overflow-hidden hover:border-[#00ff88]/40 transition-colors group"
                 >
@@ -148,9 +149,9 @@ export default function Home() {
                       {step.body}
                     </p>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
