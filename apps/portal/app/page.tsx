@@ -1,7 +1,13 @@
+import dynamic from "next/dynamic";
 import { Navbar } from "../components/Navbar";
-import { TerminalAnimation } from "../components/TerminalAnimation";
-import { DomainFinder } from "../components/DomainFinder";
 import { Icon } from "../components/Icon";
+
+const TerminalAnimation = dynamic(() =>
+  import("../components/TerminalAnimation").then((mod) => mod.TerminalAnimation)
+);
+const DomainFinder = dynamic(() =>
+  import("../components/DomainFinder").then((mod) => mod.DomainFinder)
+);
 
 const STEPS = [
   {
