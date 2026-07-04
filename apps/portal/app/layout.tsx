@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { JsonLd } from "../components/JsonLd";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
   description:
     "Zero-config GitHub App that gives every pull request its own live AWS preview URL. Powered by SST, secured by OIDC, built on your own account.",
   icons: { icon: "/icon.svg", shortcut: "/icon.svg" },
+  alternates: { canonical: "/" },
   openGraph: {
     title: "0xCI - AWS preview URLs for every pull request",
     description:
@@ -45,6 +47,7 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         />
+        <JsonLd />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans text-[#F0F0F8] antialiased`}

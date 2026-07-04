@@ -140,7 +140,7 @@ export function DomainFinder() {
                     className="flex items-center justify-between px-4 py-3 hover:bg-[#00ff88]/[0.03] transition-colors group"
                   >
                     <span className="text-sm font-mono text-[#F0F0F8]">{r.name}</span>
-                    <span className="text-xs font-mono text-[#44445A] group-hover:text-[#00ff88] transition-colors">
+                    <span className="text-xs font-mono text-[#8888A8] group-hover:text-[#00ff88] transition-colors">
                       Search →
                     </span>
                   </a>
