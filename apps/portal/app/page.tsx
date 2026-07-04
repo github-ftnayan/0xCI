@@ -348,13 +348,12 @@ export default function Home() {
           </div>
           <nav aria-label="Footer" className="flex flex-wrap justify-center gap-6">
             {[
-              { label: "Documentation", href: "#" },
+              { label: "Documentation", href: "/docs" },
               {
                 label: "GitHub",
                 href: "https://github.com/github-ftnayan/0xCI",
               },
-              { label: "Status", href: "#" },
-              { label: "Privacy", href: "#" },
+              { label: "Privacy", href: "/privacy" },
             ].map(({ label, href }) => (
               <a
                 key={label}
