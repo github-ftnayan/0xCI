@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "../../components/Navbar";
+import { CopyMarkdownButton } from "../../components/CopyMarkdownButton";
 
 export const metadata: Metadata = {
   title: "Docs - 0xCI",
@@ -117,7 +118,23 @@ const SECTIONS = [
   },
 ];
 
+const DOCS_INTRO =
+  "Everything you need to deploy preview environments and production apps on your own AWS account.";
+
+function docsToMarkdown(): string {
+  const lines: string[] = ["# 0xCI Docs", "", DOCS_INTRO, ""];
+  for (const section of SECTIONS) {
+    lines.push(`## ${section.title}`, "");
+    for (const item of section.content) {
+      lines.push(`### ${item.heading}`, "", item.body, "");
+    }
+  }
+  return lines.join("\n");
+}
+
 export default function DocsPage() {
+  const markdown = docsToMarkdown();
+
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0F]">
       <Navbar />
@@ -137,12 +154,13 @@ export default function DocsPage() {
 
         {/* Content */}
         <main className="flex-1 flex flex-col gap-16 min-w-0">
-          <div>
-            <p className="font-mono text-[11px] text-[#00ff88] tracking-[0.2em] uppercase mb-3">Documentation</p>
-            <h1 className="text-3xl font-bold text-[#F0F0F8] tracking-tight mb-4">0xCI Docs</h1>
-            <p className="text-[#8888A8] leading-relaxed">
-              Everything you need to deploy preview environments and production apps on your own AWS account.
-            </p>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <p className="font-mono text-[11px] text-[#00ff88] tracking-[0.2em] uppercase mb-3">Documentation</p>
+              <h1 className="text-3xl font-bold text-[#F0F0F8] tracking-tight mb-4">0xCI Docs</h1>
+              <p className="text-[#8888A8] leading-relaxed">{DOCS_INTRO}</p>
+            </div>
+            <CopyMarkdownButton markdown={markdown} />
           </div>
 
           {SECTIONS.map((section) => (
