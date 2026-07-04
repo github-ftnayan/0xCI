@@ -176,7 +176,9 @@ export default function Home() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[#2A2A38]">
-                    <th className="text-left px-6 py-4 text-[#8888A8] font-mono text-xs tracking-widest uppercase w-1/4"></th>
+                    <th className="text-left px-6 py-4 text-[#8888A8] font-mono text-xs tracking-widest uppercase w-1/4">
+                      <span className="sr-only">Feature</span>
+                    </th>
                     <th className="px-6 py-4 text-[#8888A8] font-mono text-xs tracking-widest uppercase text-center">
                       Vercel Pro
                     </th>
@@ -344,7 +346,7 @@ export default function Home() {
               . © 2026 0xCI
             </span>
           </div>
-          <nav className="flex flex-wrap justify-center gap-6">
+          <nav aria-label="Footer" className="flex flex-wrap justify-center gap-6">
             {[
               { label: "Documentation", href: "#" },
               {

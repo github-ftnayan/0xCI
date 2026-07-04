@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { Navbar } from "../../components/Navbar";
+
+export const metadata: Metadata = {
+  title: "Changelog - 0xCI",
+  description: "Release notes and updates for 0xCI.",
+  alternates: { canonical: "/changelog" },
+};
 
 const ENTRIES = [
   {

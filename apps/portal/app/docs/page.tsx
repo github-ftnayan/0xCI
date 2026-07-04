@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import { Navbar } from "../../components/Navbar";
+
+export const metadata: Metadata = {
+  title: "Docs - 0xCI",
+  description:
+    "Get started with 0xCI: install the GitHub App, connect your AWS account via OIDC, and get a live preview URL on every pull request.",
+  alternates: { canonical: "/docs" },
+};
 
 const SECTIONS = [
   {
