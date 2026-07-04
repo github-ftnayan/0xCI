@@ -74,8 +74,8 @@
 }
 
 @keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #00FF88; }
+  from, to { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 @keyframes fadeIn {
@@ -83,11 +83,20 @@
 }
 
 .typewriter-text {
+  position: relative;
   overflow: hidden;
-  border-right: .15em solid #00FF88;
   white-space: nowrap;
   width: fit-content;
-  animation:
-    typing 2s steps(40, end) forwards,
-    blink-caret .75s step-end infinite;
+  animation: typing 2s steps(40, end) forwards;
+}
+
+.typewriter-text::after {
+  content: "";
+  display: inline-block;
+  width: .15em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background-color: #00FF88;
+  animation: blink-caret .75s step-end infinite;
 }
