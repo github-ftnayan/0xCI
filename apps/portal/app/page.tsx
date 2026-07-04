@@ -61,7 +61,6 @@ export default function Home() {
           <h1 className="font-display-lg text-display-lg tracking-tight">
             <span className="text-[#00ff88] font-bold">0x</span>
             <span className="text-[#F0F0F8]">CI</span>{" "}
-            <br className="hidden sm:block" />
             <span className="text-[#8888A8] font-light">
               Preview deployments on your AWS.
             </span>
