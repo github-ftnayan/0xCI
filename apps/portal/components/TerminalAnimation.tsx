@@ -39,7 +39,7 @@ export function TerminalAnimation() {
             $ git push origin feature/checkout-page
           </div>
 
-          {/* Result lines — mounted only once revealed, so unrevealed
+          {/* Result lines, mounted only once revealed, so unrevealed
               lines never exist as invisible (contrast-failing) DOM nodes */}
           {LINES.slice(1).map((line, i) =>
             visibleCount > i ? (

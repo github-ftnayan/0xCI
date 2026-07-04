@@ -2,7 +2,7 @@ const BODY = `# 0xCI
 
 > Zero-config GitHub App that gives every pull request its own live AWS preview URL. Powered by SST, secured by OIDC, built on your own account.
 
-0xCI is a free, open-source alternative to Vercel/Netlify preview deployments. Instead of hosting your app on a third-party platform, 0xCI deploys every pull request to your own AWS account using SST and OpenID Connect (OIDC) — no long-lived AWS credentials are ever stored.
+0xCI is a free, open-source alternative to Vercel/Netlify preview deployments. Instead of hosting your app on a third-party platform, 0xCI deploys every pull request to your own AWS account using SST and OpenID Connect (OIDC), so no long-lived AWS credentials are ever stored.
 
 ## Audience
 
