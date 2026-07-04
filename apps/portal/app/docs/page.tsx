@@ -128,7 +128,7 @@ export default function DocsPage() {
             <a
               key={s.id}
               href={`#${s.id}`}
-              className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors py-1 font-mono"
+              className="text-sm text-[#8888A8] hover:text-[#F0F0F8] transition-colors py-2.5 font-mono"
             >
               {s.title}
             </a>

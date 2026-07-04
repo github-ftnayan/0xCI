@@ -71,7 +71,7 @@ export function DomainFinder() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="my-startup.com"
-            className="flex-1 px-4 py-3 rounded-lg bg-[#111118] border border-[#2A2A38] font-mono text-sm text-[#F0F0F8] placeholder-[#44445A] focus:outline-none focus:border-[#00ff88]/50 transition-colors"
+            className="flex-1 px-4 py-3 rounded-lg bg-[#111118] border border-[#2A2A38] font-mono text-sm text-[#F0F0F8] placeholder-[#6b6b85] focus:outline-none focus:border-[#00ff88]/50 transition-colors"
           />
           <button
             onClick={handleSearch}
@@ -154,7 +154,7 @@ export function DomainFinder() {
                 <span className="text-xs font-mono text-[#8888A8]">sst.config.ts</span>
                 <button
                   onClick={copy}
-                  className="text-xs font-mono text-[#8888A8] hover:text-[#00ff88] transition-colors"
+                  className="text-xs font-mono text-[#8888A8] hover:text-[#00ff88] transition-colors p-2 -m-2"
                 >
                   {copied ? "Copied!" : "Copy"}
                 </button>

@@ -363,7 +363,7 @@ export default function Home() {
                 rel={
                   href.startsWith("http") ? "noopener noreferrer" : undefined
                 }
-                className="font-mono text-[11px] text-[#8888A8] hover:text-[#00ff88] transition-colors"
+                className="inline-block py-2 -my-2 font-mono text-[11px] text-[#8888A8] hover:text-[#00ff88] transition-colors"
               >
                 {label}
               </a>
