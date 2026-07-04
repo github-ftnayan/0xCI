@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
+  { label: "Home", href: "/" },
   { label: "Docs", href: "/docs" },
   { label: "Changelog", href: "/changelog" },
   { label: "Community", href: "https://github.com/github-ftnayan/0xCI/discussions" },
