@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Icon } from "../../components/Icon";
 
 type Repo = { id: number; name: string; full_name: string; private: boolean };
 type Step = "loading" | "aws-setup" | "nameservers" | "done" | "error";
@@ -147,7 +148,7 @@ function SetupWizard() {
         {/* Error */}
         {step === "error" && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center">
-            <span className="material-symbols-outlined text-red-400 text-3xl mb-3 block">error</span>
+            <Icon name="error" className="w-8 h-8 text-red-400 mb-3 mx-auto" />
             <p className="text-red-400 text-sm mb-4">{error}</p>
             <a href="/" className="text-[#00ff88] text-sm font-mono hover:underline">
               ← Back to home
@@ -186,7 +187,7 @@ function SetupWizard() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-4 py-2.5 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all text-sm w-fit"
               >
-                <span className="material-symbols-outlined text-[16px] leading-none">rocket_launch</span>
+                <Icon name="rocket_launch" className="w-4 h-4" />
                 Launch CloudFormation Stack
               </a>
             </div>
@@ -244,7 +245,7 @@ function SetupWizard() {
                   </>
                 ) : (
                   <>
-                    <span className="material-symbols-outlined text-[16px] leading-none">link</span>
+                    <Icon name="link" className="w-4 h-4" />
                     Connect AWS
                   </>
                 )}
@@ -267,7 +268,7 @@ function SetupWizard() {
 
             <div className="bg-[#1A1A24] border border-[#2A2A38] rounded-xl p-5 flex flex-col gap-3">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00ff88] text-lg">dns</span>
+                <Icon name="dns" className="w-[18px] h-[18px] text-[#00ff88]" />
                 <span className="text-[#F0F0F8] text-sm font-medium">Where to find your nameservers</span>
               </div>
               <ol className="flex flex-col gap-2 text-[#8888A8] text-xs leading-relaxed list-decimal list-inside">
@@ -283,7 +284,7 @@ function SetupWizard() {
                 className="inline-flex items-center gap-2 text-[#00ff88] text-sm font-mono hover:underline w-fit"
               >
                 Open CloudFormation
-                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                <Icon name="open_in_new" className="w-3.5 h-3.5" />
               </a>
             </div>
 
@@ -296,7 +297,7 @@ function SetupWizard() {
               className="inline-flex items-center gap-2 bg-[#00ff88] text-[#0A0A0F] font-bold px-5 py-2.5 rounded-md hover:shadow-[0_0_12px_rgba(0,255,136,0.4)] transition-all text-sm w-fit"
             >
               I&apos;ve updated my nameservers
-              <span className="material-symbols-outlined text-[16px] leading-none">arrow_forward</span>
+              <Icon name="arrow_forward" className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -305,7 +306,7 @@ function SetupWizard() {
         {step === "done" && (
           <div className="flex flex-col gap-6 text-center">
             <div className="w-16 h-16 rounded-full bg-[#00ff88]/10 border border-[#00ff88]/30 flex items-center justify-center mx-auto">
-              <span className="material-symbols-outlined text-[#00ff88] text-3xl">check_circle</span>
+              <Icon name="check_circle" className="w-8 h-8 text-[#00ff88]" />
             </div>
             <div>
               <h1 className="text-[#F0F0F8] font-bold text-xl mb-2">You&apos;re all set</h1>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Icon } from "./Icon";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -80,9 +81,7 @@ export function Navbar() {
             aria-label="Toggle menu"
             className="md:hidden text-[#8888A8] hover:text-[#00ff88] transition-colors p-2.5"
           >
-            <span className="material-symbols-outlined text-2xl">
-              {menuOpen ? "close" : "menu"}
-            </span>
+            <Icon name={menuOpen ? "close" : "menu"} className="w-6 h-6" />
           </button>
         </div>
       </div>
