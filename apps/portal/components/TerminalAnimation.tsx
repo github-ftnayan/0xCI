@@ -29,7 +29,7 @@ export function TerminalAnimation() {
           <span className="w-3 h-3 rounded-full bg-[#2A2A38]" />
           <span className="w-3 h-3 rounded-full bg-[#2A2A38]" />
           <span className="w-3 h-3 rounded-full bg-[#2A2A38]" />
-          <span className="absolute inset-0 flex items-center justify-center pointer-events-none font-mono text-[10px] text-[#8888A8] tracking-widest">bash — 0xCI</span>
+          <span className="absolute inset-0 flex items-center justify-center pointer-events-none font-mono text-[10px] text-[#8888A8] tracking-widest">bash - 0xCI</span>
         </div>
 
         {/* Terminal body */}

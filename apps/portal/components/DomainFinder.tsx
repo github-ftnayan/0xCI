@@ -58,9 +58,9 @@ export function DomainFinder() {
           <span className="text-[#8888A8] font-light">We generate the config.</span>
         </h2>
         <p className="text-center text-[#8888A8] mb-10 max-w-lg mx-auto text-sm leading-relaxed">
-          Check availability and get your{" "}
-          <code className="font-mono text-[#A8FFB8] text-xs">sst.config.ts</code>{" "}
-          domain block auto-generated.
+          Check availability, then enter it in the setup wizard. 0xCI
+          provisions the Route 53 hosted zone, SSL certificate, and DNS for
+          you, so every merge to main deploys straight to your domain.
         </p>
 
         {/* Search bar */}
@@ -108,7 +108,7 @@ export function DomainFinder() {
                   available === false ? "text-[#FF4455]" :
                   "text-[#8888A8]"
                 }`}>
-                  {available === true  ? "Available — grab it before someone else does" :
+                  {available === true  ? "Available, grab it before someone else does" :
                    available === false ? "Already registered" :
                    "Availability unknown for this TLD"}
                 </p>

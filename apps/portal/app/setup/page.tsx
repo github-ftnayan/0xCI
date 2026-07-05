@@ -201,7 +201,7 @@ function SetupWizard() {
                 <span className="text-[#F0F0F8] text-sm font-medium">Enter your AWS Account ID</span>
               </div>
               <p className="text-[#8888A8] text-xs leading-relaxed">
-                Found in the top-right corner of the AWS console — 12 digits, no hyphens.
+                Found in the top-right corner of the AWS console, 12 digits, no hyphens.
               </p>
               <input
                 type="text"
@@ -227,7 +227,7 @@ function SetupWizard() {
               </select>
               <input
                 type="text"
-                placeholder="myapp.com (optional — for production deploys)"
+                placeholder="myapp.com (optional, for production deploys)"
                 value={domain}
                 onChange={(e) => setDomain(e.target.value.toLowerCase().trim())}
                 className="font-mono bg-[#0A0A0F] border border-[#2A2A38] focus:border-[#00ff88]/50 rounded-md px-4 py-2.5 text-[#F0F0F8] text-sm outline-none transition-colors placeholder:text-[#8888A8]/30 w-full"

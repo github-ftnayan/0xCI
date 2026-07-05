@@ -23,7 +23,7 @@ const STEPS = [
   {
     icon: "rocket_launch",
     title: "Ship",
-    body: "Open a PR and get a live preview URL instantly. Merge with confidence, without the infrastructure headache.",
+    body: "Open a PR and get a live preview URL instantly. Merge to main and it deploys to production on your own custom domain, automatically.",
   },
 ] as const;
 
@@ -168,7 +168,7 @@ export default function Home() {
               </h2>
               <p className="text-[#8888A8] mt-4 max-w-xl mx-auto text-sm leading-relaxed">
                 Managed platforms trade your infrastructure control for
-                convenience — and charge a premium for it. 0xCI gives you the
+                convenience, and charge a premium for it. 0xCI gives you the
                 same DX on your own AWS account.
               </p>
             </div>
@@ -238,7 +238,7 @@ export default function Home() {
                       "Required",
                       "Required",
                       <span key="s" className="text-[#00ff88]">
-                        Never — OIDC only
+                        Never, OIDC only
                       </span>,
                     ],
                   ].map(([feature, vercel, netlify, us], i) => (
