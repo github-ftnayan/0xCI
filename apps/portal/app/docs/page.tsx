@@ -24,7 +24,7 @@ const SECTIONS = [
       },
       {
         heading: "2. Connect your AWS account",
-        body: `In the setup wizard, select your repositories, choose your AWS region, and enter your 12-digit AWS Account ID. Click "Launch CloudFormation Stack" — this creates an IAM role in your account that GitHub Actions can assume via OIDC. No long-lived credentials are ever stored.`,
+        body: `In the setup wizard, select your repositories, choose your AWS region, and enter your 12-digit AWS Account ID. Click "Launch CloudFormation Stack", this creates an IAM role in your account that GitHub Actions can assume via OIDC. No long-lived credentials are ever stored.`,
       },
       {
         heading: "3. Open a pull request",
@@ -38,11 +38,11 @@ const SECTIONS = [
     content: [
       {
         heading: "OIDC authentication",
-        body: `0xCI never stores AWS credentials. Instead, it uses OpenID Connect (OIDC) — GitHub Actions obtains a short-lived token from GitHub's OIDC provider and exchanges it for temporary AWS credentials. The IAM role created by CloudFormation only trusts tokens from your specific GitHub org.`,
+        body: `0xCI never stores AWS credentials. Instead, it uses OpenID Connect (OIDC), GitHub Actions obtains a short-lived token from GitHub's OIDC provider and exchanges it for temporary AWS credentials. The IAM role created by CloudFormation only trusts tokens from your specific GitHub org.`,
       },
       {
         heading: "Preview environments",
-        body: `Each pull request gets its own isolated AWS environment deployed to a unique stage (e.g. pr-42). SST auto-detects your framework (Next.js, SvelteKit, or static) and deploys accordingly. The preview URL is a CloudFront distribution — globally cached, HTTPS by default.`,
+        body: `Each pull request gets its own isolated AWS environment deployed to a unique stage (e.g. pr-42). SST auto-detects your framework (Next.js, SvelteKit, or static) and deploys accordingly. The preview URL is a CloudFront distribution, globally cached, HTTPS by default.`,
       },
       {
         heading: "Teardown",
@@ -60,7 +60,7 @@ const SECTIONS = [
     content: [
       {
         heading: "GitHub Secrets",
-        body: `0xCI injects two secrets into your repository during setup:\n\n• AWS_ROLE_ARN — the ARN of the IAM role to assume\n• AWS_REGION — the AWS region to deploy to\n• DOMAIN_NAME — your production domain (if configured)`,
+        body: `0xCI injects two secrets into your repository during setup:\n\n• AWS_ROLE_ARN, the ARN of the IAM role to assume\n• AWS_REGION, the AWS region to deploy to\n• DOMAIN_NAME, your production domain (if configured)`,
       },
       {
         heading: "sst.config.ts",
@@ -68,7 +68,7 @@ const SECTIONS = [
       },
       {
         heading: "Supported frameworks",
-        body: `0xCI auto-detects:\n\n• Next.js — deployed via OpenNext on Lambda + CloudFront\n• SvelteKit — deployed on Lambda + CloudFront\n• Static sites — deployed to S3 + CloudFront`,
+        body: `0xCI auto-detects:\n\n• Next.js, deployed via OpenNext on Lambda + CloudFront\n• SvelteKit, deployed on Lambda + CloudFront\n• Static sites, deployed to S3 + CloudFront`,
       },
     ],
   },
@@ -78,7 +78,7 @@ const SECTIONS = [
     content: [
       {
         heading: "Requirements",
-        body: `Your domain must have a hosted zone in Route 53 in your AWS account. If your domain is registered elsewhere (Namecheap, GoDaddy, etc.), you need to update the nameservers to the ones Route 53 gives you — a one-time 5-minute step.`,
+        body: `Your domain must have a hosted zone in Route 53 in your AWS account. If your domain is registered elsewhere (Namecheap, GoDaddy, etc.), you need to update the nameservers to the ones Route 53 gives you, a one-time 5-minute step.`,
       },
       {
         heading: "Setup",
@@ -96,15 +96,15 @@ const SECTIONS = [
     content: [
       {
         heading: "Does 0xCI store my AWS credentials?",
-        body: `Never. 0xCI uses OIDC — GitHub Actions obtains temporary credentials at runtime. No secrets are stored on 0xCI's servers.`,
+        body: `Never. 0xCI uses OIDC, GitHub Actions obtains temporary credentials at runtime. No secrets are stored on 0xCI's servers.`,
       },
       {
         heading: "What does it cost?",
-        body: `0xCI itself is free. You pay only for the AWS resources it provisions in your account. For typical usage (a few preview environments at a time), this is well within the AWS free tier — often under $1/month.`,
+        body: `0xCI itself is free. You pay only for the AWS resources it provisions in your account. For typical usage (a few preview environments at a time), this is well within the AWS free tier, often under $1/month.`,
       },
       {
         heading: "What if I already have a sst.config.ts?",
-        body: `0xCI checks before injecting. If a deploy.yml already exists on your default branch, it skips injection entirely. If you have a custom sst.config.ts, 0xCI won't overwrite it — you may need to merge the changes manually.`,
+        body: `0xCI checks before injecting. If a deploy.yml already exists on your default branch, it skips injection entirely. If you have a custom sst.config.ts, 0xCI won't overwrite it, you may need to merge the changes manually.`,
       },
       {
         heading: "Can I add more repositories later?",

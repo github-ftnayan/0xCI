@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// RDAP servers for common TLDs — free, no API key, ICANN official protocol
+// RDAP servers for common TLDs, free, no API key, ICANN official protocol
 // Sources: https://data.iana.org/rdap/dns.json
 const RDAP: Record<string, string> = {
   com: "https://rdap.verisign.com/com/v1",
