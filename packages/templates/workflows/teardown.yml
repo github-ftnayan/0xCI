@@ -1,4 +1,4 @@
-# 0xci-version: 3
+# 0xci-version: 4
 name: 0xCI Teardown
 
 on:

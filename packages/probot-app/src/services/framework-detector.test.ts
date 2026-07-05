@@ -22,6 +22,13 @@ describe("detectFramework", () => {
     ["astro", { dependencies: { astro: "^4.0.0" } }],
     ["remix", { devDependencies: { "@remix-run/dev": "^2.0.0" } }],
     ["remix", { dependencies: { "@remix-run/react": "^2.0.0" } }],
+    [
+      "react-router",
+      {
+        dependencies: { "react-router": "^7.0.0" },
+        devDependencies: { "@react-router/dev": "^7.0.0" },
+      },
+    ],
     ["nuxt", { dependencies: { nuxt: "^3.0.0" } }],
     ["sveltekit", { devDependencies: { "@sveltejs/kit": "^2.0.0" } }],
     ["solidstart", { dependencies: { "@solidjs/start": "^1.0.0" } }],
@@ -36,6 +43,16 @@ describe("detectFramework", () => {
       "main"
     );
     expect(result).toBe(expected);
+  });
+
+  it("falls back to static for plain react-router SPA usage without @react-router/dev", async () => {
+    const result = await detectFramework(
+      mockContext({ dependencies: { "react-router": "^7.0.0" } }),
+      "owner",
+      "repo",
+      "main"
+    );
+    expect(result).toBe("static");
   });
 
   it("falls back to static when no framework dependency matches", async () => {

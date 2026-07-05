@@ -4,6 +4,7 @@ export type Framework =
   | "nextjs"
   | "astro"
   | "remix"
+  | "react-router"
   | "nuxt"
   | "sveltekit"
   | "solidstart"
@@ -33,6 +34,9 @@ export async function detectFramework(
       if (deps["next"]) return "nextjs";
       if (deps["astro"]) return "astro";
       if (deps["@remix-run/dev"] || deps["@remix-run/react"]) return "remix";
+      // Framework-mode React Router v7 apps depend on "@react-router/dev" for
+      // the build/dev CLI — plain SPA usage of "react-router" alone doesn't.
+      if (deps["@react-router/dev"]) return "react-router";
       if (deps["nuxt"]) return "nuxt";
       if (deps["@sveltejs/kit"]) return "sveltekit";
       if (deps["@solidjs/start"]) return "solidstart";

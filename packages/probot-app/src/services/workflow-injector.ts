@@ -15,7 +15,7 @@ const PR_BODY_INITIAL = `## 0xCI Deployment Setup\n\nThis PR adds automated prev
 const PR_BODY_UPDATE = `## 0xCI Template Update\n\nThis PR updates the 0xCI deployment workflows to the latest template version.\n\nMerge to apply the latest fixes and improvements.`;
 
 // Bumped whenever templates change in a way that requires re-injection into existing repos.
-const TEMPLATE_VERSION = 3;
+const TEMPLATE_VERSION = 4;
 
 function readTemplate(relativePath: string): string {
   return readFileSync(join(TEMPLATES_DIR, relativePath), "utf-8");

@@ -1,5 +1,5 @@
 /// <reference path="./.sst/platform/config.d.ts" />
-// 0xci-version: 3
+// 0xci-version: 4
 
 export default $config({
   app(input) {
@@ -19,6 +19,7 @@ export default $config({
       | "nextjs"
       | "astro"
       | "remix"
+      | "react-router"
       | "nuxt"
       | "sveltekit"
       | "solidstart"
@@ -34,6 +35,7 @@ export default $config({
         if (deps["next"]) return "nextjs";
         if (deps["astro"]) return "astro";
         if (deps["@remix-run/dev"] || deps["@remix-run/react"]) return "remix";
+        if (deps["@react-router/dev"]) return "react-router";
         if (deps["nuxt"]) return "nuxt";
         if (deps["@sveltejs/kit"]) return "sveltekit";
         if (deps["@solidjs/start"]) return "solidstart";
@@ -60,6 +62,9 @@ export default $config({
         break;
       case "remix":
         url = new sst.aws.Remix("Web", { ...domainArgs }).url;
+        break;
+      case "react-router":
+        url = new sst.aws.React("Web", { ...domainArgs }).url;
         break;
       case "nuxt":
         url = new sst.aws.Nuxt("Web", { ...domainArgs }).url;
