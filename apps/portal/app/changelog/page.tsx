@@ -9,9 +9,17 @@ export const metadata: Metadata = {
 
 const ENTRIES = [
   {
+    version: "v0.7",
+    date: "2026-07-05",
+    tag: "Latest",
+    changes: [
+      { type: "feat", text: "Framework auto-detection expanded to Astro, Remix, Nuxt, SolidStart, TanStack Start, and Analog, alongside existing Next.js and SvelteKit support" },
+    ],
+  },
+  {
     version: "v0.6",
     date: "2026-07-04",
-    tag: "Latest",
+    tag: null,
     changes: [
       { type: "feat", text: "FAQPage structured data added to the docs FAQ section for featured-snippet and AI answer-engine eligibility" },
       { type: "feat", text: "HowTo structured data added to the getting-started steps" },
@@ -129,7 +137,7 @@ export default function ChangelogPage() {
                 <ul className="flex flex-col gap-2">
                   {entry.changes.map((change, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <span className={`font-mono text-[10px] px-2 py-0.5 rounded tracking-widest uppercase shrink-0 mt-0.5 ${TAG_COLORS[change.type] ?? "text-[#8888A8] bg-[#2A2A38]"}`}>
+                      <span className={`font-mono text-[10px] w-14 py-0.5 rounded tracking-widest uppercase shrink-0 mt-0.5 inline-flex items-center justify-center ${TAG_COLORS[change.type] ?? "text-[#8888A8] bg-[#2A2A38]"}`}>
                         {change.type}
                       </span>
                       <span className="text-[#8888A8] text-sm leading-relaxed">{change.text}</span>
