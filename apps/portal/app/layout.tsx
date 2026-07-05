@@ -16,27 +16,27 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://0xci.online"),
-  title: "0xCI - AWS preview URLs for every pull request",
+  title: "0xCI - AWS preview and production deploys for every pull request",
   description:
-    "Zero-config GitHub App that gives every pull request its own live AWS preview URL. Powered by SST, secured by OIDC, built on your own account.",
+    "Zero-config GitHub App that gives every pull request its own live AWS preview URL, then ships every merge to production on your own custom domain. Powered by SST, secured by OIDC, built on your own account.",
   icons: { icon: "/icon.svg", shortcut: "/icon.svg" },
   alternates: { canonical: "/" },
   verification: {
     google: "bki_aaFmuvNh7ti__tElUWkmBo_BNdZXMKzdEx12_q0",
   },
   openGraph: {
-    title: "0xCI - AWS preview URLs for every pull request",
+    title: "0xCI - AWS preview and production deploys for every pull request",
     description:
-      "Zero-config GitHub App that gives every pull request its own live AWS preview URL.",
+      "Zero-config GitHub App that gives every pull request its own live AWS preview URL, then ships every merge to production on your own custom domain.",
     url: "https://0xci.online",
     siteName: "0xCI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "0xCI - AWS preview URLs for every pull request",
+    title: "0xCI - AWS preview and production deploys for every pull request",
     description:
-      "Zero-config GitHub App that gives every pull request its own live AWS preview URL.",
+      "Zero-config GitHub App that gives every pull request its own live AWS preview URL, then ships every merge to production on your own custom domain.",
   },
 };
 

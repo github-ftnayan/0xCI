@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "0xCI - AWS preview URLs for every pull request";
+export const alt = "0xCI - AWS preview and production deploys for every pull request";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -63,14 +63,17 @@ export default async function Image() {
           <div
             style={{
               display: "flex",
-              fontSize: 68,
+              fontSize: 60,
               fontWeight: 700,
               color: "#F0F0F8",
               lineHeight: 1.15,
               letterSpacing: "-0.02em",
+              maxWidth: 900,
+              textAlign: "center",
+              justifyContent: "center",
             }}
           >
-            Preview deployments on your AWS
+            From PR preview to production, on your own AWS
           </div>
           <div
             style={{
@@ -81,8 +84,8 @@ export default async function Image() {
               lineHeight: 1.4,
             }}
           >
-            Every pull request gets its own live preview URL. Zero config, no
-            vendor lock-in.
+            Every pull request gets a preview URL. Every merge to main ships
+            to production on your custom domain. Zero config.
           </div>
         </div>
 
