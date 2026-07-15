@@ -53,7 +53,7 @@ export default $config({
       name: "0xci.online",
       type: "TXT",
       ttl: 300,
-      records: [`"v=spf1 -all"`],
+      records: ["v=spf1 -all"],
     });
 
     new aws.route53.Record("DmarcRecord", {
@@ -61,7 +61,7 @@ export default $config({
       name: "_dmarc.0xci.online",
       type: "TXT",
       ttl: 300,
-      records: [`"v=DMARC1; p=reject; rua=mailto:panchalnayann@gmail.com"`],
+      records: ["v=DMARC1; p=reject; rua=mailto:panchalnayann@gmail.com"],
     });
 
     return { url: portal.url, webhookUrl: webhook.url };
