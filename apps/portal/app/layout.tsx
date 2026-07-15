@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { JsonLd } from "../components/JsonLd";
 import "./globals.css";
 
@@ -46,6 +47,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-GMLVWQ49FC"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-GMLVWQ49FC');`}
+        </Script>
         <JsonLd />
       </head>
       <body
