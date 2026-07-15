@@ -61,7 +61,17 @@ export default $config({
       name: "_dmarc.0xci.online",
       type: "TXT",
       ttl: 300,
-      records: ["v=DMARC1; p=reject; rua=mailto:panchalnayann@gmail.com"],
+      records: ["v=DMARC1; p=reject"],
+    });
+
+    // RFC 7505 null MX: declares this domain accepts no mail, instead of
+    // silently having no MX record (which scanners flag as an error).
+    new aws.route53.Record("MxRecord", {
+      zoneId: zone.zoneId,
+      name: "0xci.online",
+      type: "MX",
+      ttl: 300,
+      records: ["0 ."],
     });
 
     return { url: portal.url, webhookUrl: webhook.url };
