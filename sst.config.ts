@@ -43,6 +43,27 @@ export default $config({
       },
     });
 
+    const zone = aws.route53.getZoneOutput({ name: "0xci.online." });
+
+    // No mail is sent from this domain; publishing null SPF/DMARC prevents
+    // it from being used to spoof mail, which drops phishing-heuristic scores
+    // from scanners like IPQS/ScamAdviser.
+    new aws.route53.Record("SpfRecord", {
+      zoneId: zone.zoneId,
+      name: "0xci.online",
+      type: "TXT",
+      ttl: 300,
+      records: [`"v=spf1 -all"`],
+    });
+
+    new aws.route53.Record("DmarcRecord", {
+      zoneId: zone.zoneId,
+      name: "_dmarc.0xci.online",
+      type: "TXT",
+      ttl: 300,
+      records: [`"v=DMARC1; p=reject; rua=mailto:panchalnayann@gmail.com"`],
+    });
+
     return { url: portal.url, webhookUrl: webhook.url };
   },
 });
